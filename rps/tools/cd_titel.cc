@@ -47,6 +47,7 @@ void remove_spaces(MS_t &MS)
    MR[","]="_";
    MR["-"]="_";
    MR["."]="_";
+   MR["&"]="and";
    for(MS_t::iterator i=MS.begin();i!=MS.end();++i)
     {
       for(std::map<std::string,std::string>::const_iterator j=MR.begin();j!=MR.end();++j)
