@@ -20,6 +20,7 @@ class RPS
 
       void stop_playing();
 
+      std::list<Soundfile> PSL;
    public:
       RPS(const std::string &s);
       ~RPS() {stop_playing();}
@@ -32,6 +33,7 @@ class RPS
 
       void play(Soundfile &s) ;
       void play(const std::string &CD) ;
+      void stop_CD() {PSL.clear();}
 
       void remove_from_playlist(const int pid) ;
       void remove_from_playlist(const Soundfile &s,const bool kill_pids);

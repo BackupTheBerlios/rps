@@ -15,7 +15,6 @@ FileList::FileList(const std::string &s)
    get_file_info();
    for(t_filemap::iterator i=filemap.begin();i!=filemap.end();++i)
       i->second.sort();      
-//      std::sort(i->second.begin(),i->second.end());
 }
 
 void FileList::read_dir(const st_key &key)

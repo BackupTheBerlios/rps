@@ -43,6 +43,7 @@
 		  <child>
 		    <widget class="button" id="button_quit">
 		      <property name="visible">True</property>
+		      <property name="tooltip" translatable="yes">Exit the program.</property>
 		      <property name="can_focus">True</property>
 		      <property name="has_focus">True</property>
 		      <property name="label" translatable="yes">Quit</property>
@@ -56,8 +57,9 @@
 		    <widget class="toggle" id="togglebutton_play_dir">
 		      <property agent="glademm" name="cxx_visibility">protected</property>
 		      <property name="visible">True</property>
+		      <property name="tooltip" translatable="yes">Starts to play a CD on expanding the node.</property>
 		      <property name="can_focus">True</property>
-		      <property name="label" translatable="yes">Play Directory</property>
+		      <property name="label" translatable="yes">Play CD</property>
 		      <property name="use_underline">True</property>
 		      <property name="stock_pixmap">gtk-jump-to</property>
 		      <property name="active">False</property>
@@ -67,9 +69,21 @@
 		  </child>
 
 		  <child>
+		    <widget class="button" id="button_stop_CD">
+		      <property name="visible">True</property>
+		      <property name="tooltip" translatable="yes">CD stops when the actual piece is done. </property>
+		      <property name="label" translatable="yes">Stop CD</property>
+		      <property name="use_underline">True</property>
+		      <property name="stock_pixmap">gtk-stop</property>
+		      <signal name="clicked" handler="on_button_stop_CD_clicked" last_modification_time="Mon, 06 Oct 2003 11:00:56 GMT"/>
+		    </widget>
+		  </child>
+
+		  <child>
 		    <widget class="toggle" id="togglebutton_repeat">
 		      <property agent="glademm" name="cxx_visibility">protected</property>
 		      <property name="visible">True</property>
+		      <property name="tooltip" translatable="yes">Repeating the selected pieces.</property>
 		      <property name="can_focus">True</property>
 		      <property name="label" translatable="yes">Repeat</property>
 		      <property name="use_underline">True</property>
@@ -84,6 +98,7 @@
 		    <widget class="toggle" id="togglebutton_kill_on_new">
 		      <property agent="glademm" name="cxx_visibility">protected</property>
 		      <property name="visible">True</property>
+		      <property name="tooltip" translatable="yes">Selecting a piece will stop all other ones immediatly.</property>
 		      <property name="can_focus">True</property>
 		      <property name="label" translatable="yes">Kill on new</property>
 		      <property name="use_underline">True</property>

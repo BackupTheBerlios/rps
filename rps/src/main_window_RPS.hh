@@ -46,7 +46,7 @@ class main_window_RPS : public main_window_RPS_glade
         Glib::RefPtr<Gtk::TreeStore> m_refTreeModelSelect;
 
         void fill_columns();
-        void fill_soundfiles(const std::vector<Soundfile> &VS,Gtk::TreeModel::Row &row);
+        void fill_soundfiles(const std::list<Soundfile> &VS,Gtk::TreeModel::Row &row);
         void fill_playlist();
         void entry_selected() ;
         void signal_playlist_cachanged() {fill_playlist();}
@@ -68,6 +68,7 @@ class main_window_RPS : public main_window_RPS_glade
 #endif
         void on_togglebutton_repeat_toggled();
         void on_button_quit_clicked();
+        void on_button_stop_CD_clicked();
         void on_togglebutton_kill_on_new_toggled();
         void on_togglebutton_play_dir_toggled();
         void on_treeview_main_row_activated(const Gtk::TreeModel::Path& path, Gtk::TreeViewColumn* column);

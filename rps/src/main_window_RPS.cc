@@ -98,9 +98,9 @@ void main_window_RPS::fill_columns()
 }                    
 
 
-void main_window_RPS::fill_soundfiles(const std::vector<Soundfile> &VS,Gtk::TreeModel::Row &row)
+void main_window_RPS::fill_soundfiles(const std::list<Soundfile> &VS,Gtk::TreeModel::Row &row)
 {
-   for(std::vector<Soundfile>::const_iterator j=VS.begin();j!=VS.end();++j)
+   for(std::list<Soundfile>::const_iterator j=VS.begin();j!=VS.end();++j)
     {
       Gtk::TreeModel::Row childrow = *(m_refTreeModelSelect->append(row.children()));
       childrow[m_ColumnsSound.col_name] = j->Name();
@@ -229,3 +229,7 @@ void main_window_RPS::on_togglebutton_kill_on_new_toggled()
 }
 
 
+void main_window_RPS::on_button_stop_CD_clicked()
+{
+   rpgs.stop_CD();
+}
