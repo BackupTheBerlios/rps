@@ -1,6 +1,13 @@
 #!/bin/bash
 
-#1. CD einlesen
+#1. Titel aus Datenbank holen
+function get_database()
+{
+   disc-cover -D /dev/sr0 -t txt -o - > temp.txt
+   cat temp.txt
+}
+
+#2. CD einlesen
 function read_cd()
 {
    rm -r DDD
@@ -11,20 +18,15 @@ function read_cd()
 }
 
 
-#2. mp3 erzeugen
+#3. mp3 erzeugen
 function encode()
 {
    cd DDD
    nice -20 mlame -o "--vbr-new -h" *.wav
+   echo "Rückgabe von 'lame': $?"
    cd ..
 }
 
-#3. Titel aus Datenbank holen
-function get_database()
-{
-   disc-cover -D /dev/sr0 -t txt -o - > temp.txt
-   cat temp.txt
-}
 
 #4 Titel ersetzen
 function set_files()
