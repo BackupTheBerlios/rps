@@ -1,16 +1,33 @@
 #include <soundfile.hh>
 #include <unistd.h>
 #include <errno.h>
-#include <Play.hh>
-
 #include <iostream>
+
 void Soundfile::play(const std::string &mainpath,const bool repeatbool)
 {
-   Play P(*this,repeatbool);
-   mpgpid = P.MpgPid(); 
-   asdpid = P.AsdPid();
-   is_played=true;
    repeat=repeatbool;
+
+   int fd[2];
+   if (pipe(fd)) { perror("pipe"); return; }
+   if (!(mpgpid=fork()))
+    {close(fd[0]); 
+     dup2(fd[1],1);
+     close(fd[1]); 
+     execl("/usr/bin/mpg123",  "mpg123","-sq","-b10240",
+          repeat?"-Z":"-q",Filename().c_str(),0);
+     perror("/usr/bin/mpg123");
+     _exit(errno);
+    }
+   if (!(asdpid=fork()))
+    {close(fd[1]);
+     dup2(fd[0],0);
+     close(fd[0]); 
+     execl("/usr/bin/asdcat",  "asdcat",0);
+     perror("/usr/bin/asdcat");
+     _exit(errno);
+    }
+   close(fd[0]); close(fd[1]);
+   is_played=true;
 }
 
 void Soundfile::stop_playing()

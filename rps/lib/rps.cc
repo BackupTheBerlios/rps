@@ -1,5 +1,4 @@
 #include <rps.hh>
-#include <Play.hh>
 
 #include <iostream>
 
