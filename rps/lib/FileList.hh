@@ -14,6 +14,7 @@ class FileList
       void read_subdirs();
       void get_file_info();
    public:
+      FileList() {}
       FileList(const std::string &s);
 
       const std::string MainPath() const {return mainpath;}

@@ -4,13 +4,11 @@
 
 #if ASDSUPPORT
    RPS *RPS::self;
-//   AsdConnection *RPS::asdcon;
 #endif
 
 
 RPS::RPS(const std::string &s) 
-: filelist(s), 
-  repeat(false),kill_on_new(false)
+: repeat(false),kill_on_new(false)
 {
 #if ASDSUPPORT
    self=this;  
@@ -20,6 +18,7 @@ RPS::RPS(const std::string &s)
       exit (1);
     }
 #endif
+   filelist=FileList(s);
 }
 
 #if ASDSUPPORT
