@@ -9,6 +9,7 @@
 
 class FileListCache
 {
+      friend class FileList;
    public:
       struct st_key{std::string name; time_t file_time;
              st_key(const std::string &n,const  time_t t)
@@ -24,12 +25,24 @@ class FileListCache
                   : time(t),default_volume(d) {}
              };
    private:
-      std::map<st_key,st_cache> CM;
+      ~FileListCache() { save(); }
+      typedef std::map<st_key,st_cache> t_cachemap;
+      t_cachemap CM;
 
    public:
-      void load_cache();
+      void load();
+      void save() const;
 
       const std::map<st_key,st_cache> &getCache() const {return CM;}   
+      void push_back(const st_key &k,const st_cache &c) {CM[k]=c;}
+
+      typedef t_cachemap::const_iterator const_iterator;
+      typedef t_cachemap::iterator iterator;
+      const_iterator begin() const{ return CM.begin(); }  
+      const_iterator end()   const{ return CM.end();   }  
+      iterator begin() { return CM.begin(); }
+      iterator end()   { return CM.end();   }
+
 };
 
 
@@ -69,7 +82,7 @@ class FileList
    public:
       FileList() {}
       FileList(const std::vector<std::string> &path);
-      ~FileList() { save_cache(); }
+      ~FileList() { /*FLC.save();*/ /*save_cache();*/ }
 
 //      SigC::Signal0<std::string> &SigFileScanned() {return sig_file_scanned;}
 //      const std::string &ScannedFile(const std::string &s){return s;}

@@ -82,13 +82,19 @@ int Soundfile::get_volume() const
   Volume volume;
 //std::cerr << "get volume for "<<asdi.getASDI()<<'\n';
   AsdConnection *asdcon = asd_connection_new(NULL) ;
+//  static int count=0;
   if (!asd_volume_get(asdcon, const_cast<gchar*>(asdi.getASDI()) , &volume))
    {
-    std::cerr << "Could not get device volume for "<<asdi.getASDI()<<'\n';
-    return 99;
+//    ++count;
+    std::cerr << "Could not get device volume for "<<asdi.getASDI()
+//              <<" count="<<count
+                <<'\n';
+//    if(count<=100) get_volume();
+    return 100;
    }
   else
   {
+//    count=0;
     long int s=0;
     for (int i=0;i<ASD_CHANNELS_MAX;++i) s+=volume.factor[i];
     int v =  int(s/65535./ASD_CHANNELS_MAX*100.);

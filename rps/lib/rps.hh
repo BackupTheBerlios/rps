@@ -50,6 +50,8 @@ class RPS
    private:
       std::vector<asd_sound_identifier> vec_asd_list;
       void remove_asd_client(const asd_sound_identifier &ain);
+      void try_to_get_new_client(Soundfile &s) ;
+      bool has_found_new_socket;
    public:
       static RPS *self;
       void new_asd_client(const std::string &s,Soundfile *s);

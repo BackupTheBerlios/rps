@@ -4,6 +4,6 @@
 main()
 {
    std::vector<std::string> V;
-   V.push_back("/var/thoma/sound/RoleSound");
+//   V.push_back("/var/thoma/sound/RoleSound");
    RPS rps(V);
 }

@@ -19,7 +19,6 @@ RPS::RPS(const std::vector<std::string> &newpath)
     }
 #endif
 
-
    std::vector<std::string> path;
    load_conf(path);
    if(path.empty() && newpath.empty()) 
@@ -45,12 +44,23 @@ void RPS::remove_asd_client(const asd_sound_identifier &ain)
 void RPS::new_asd_client(const std::string &name,Soundfile *s)
 {
    asd_sound_identifier ain(name);
+   static int count=0;   
+//std::cout << ain.getASDI()<<'\t'<<name<<'\t';
    if(std::find(vec_asd_list.begin(),vec_asd_list.end(),ain)==vec_asd_list.end())
      {
        vec_asd_list.push_back(ain);
+//std::cout << "FOUND\n";
        s->setClient(ain);
        s->set_volume(filelist.get_default_volume(*s));
+//      std::cout << " NEW found at try:\t"<<count<<'\n';
+      has_found_new_socket=true;
+      count=0;
      }
+   if(!has_found_new_socket)
+    {
+//      std::cout << "NOT found count:\t"<<++count<<'\n';
+      if(count>100) {std::cout << "I give up\n";  count=0; }
+    }
 }
 
 
@@ -60,10 +70,20 @@ void _new_asd_client(ProtocolAsdListResponse* response, gpointer userdata)
 //std::cout << response->shortname<<'\n';
   if(std::string(response->type)=="SOCKET")
    {
-//std::cout << "Socket :"<<response->shortname<<'\n';
+//std::cout << "SOCKET :"<<response->shortname<<'\n';
      Soundfile *s=static_cast<Soundfile*>(userdata);   
      RPS::self->new_asd_client(response->shortname,s);
    }
+}
+
+void RPS::try_to_get_new_client(Soundfile &s) 
+{
+   AsdConnection *asdcon = asd_connection_new(NULL) ;
+   if (!asdcon)
+     { perror("Could not create connection");
+       exit (1);
+     }  
+   asd_list_sources(asdcon, _new_asd_client, &s);  // ASD_LIB function
 }
 #endif
 
@@ -76,15 +96,17 @@ void RPS::play(Soundfile &s)
 
    s.play(repeat);
 #ifdef ASDSUPPORT
-   AsdConnection *asdcon = asd_connection_new(NULL) ;
-   if (!asdcon)
-     { perror("Could not create connection");
-       exit (1);
-     }  
-   asd_list_sources(asdcon, _new_asd_client, &s);
+   has_found_new_socket=false;
+   while(true)
+    {
+      try_to_get_new_client(s);
+      if(has_found_new_socket) break;
+    }
 #endif
    playlist.push_back(s);
 }
+
+
 
 void RPS::play(const std::string &cd) 
 {

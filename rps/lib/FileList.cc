@@ -7,7 +7,7 @@
 FileList::FileList(const std::vector<std::string> &path)
 : mainpath(path)
 {
-   FLC.load_cache();
+   FLC.load();
    for(std::vector<std::string>::const_iterator i=path.begin();i!=path.end();++i)
     {
       st_key key(*i,0);
@@ -32,15 +32,15 @@ void FileList::read_dir(const st_key &key)
       struct stat sa;
       stat((key.path+"/"+ent->d_name).c_str(),&sa);
       filemap[key]; // necessary to append dirs without files 
-      if(sa.st_mode & S_IFREG )
-       {
-         filemap[key].push_back(Soundfile(key.path,ent->d_name,sa.st_mtime));
-//std::cout <<'#'<<ent->d_name <<"#  F\t"<<key.path<<'\t'<<sa.st_mtime<<'\n';
-       }
       if(sa.st_mode & S_IFDIR)
        {
          st_key nkey(key.path+"/"+ent->d_name,key.sub_level+1);
          read_dir(nkey);
+       }
+      if(sa.st_mode & S_IFREG )
+       {
+         filemap[key].push_back(Soundfile(key.path,ent->d_name,sa.st_mtime));
+//std::cout <<'#'<<ent->d_name <<"#  F\t"<<key.path<<'\t'<<sa.st_mtime<<'\n';
        }
     }   
 }
@@ -97,7 +97,8 @@ void FileList::get_file_info()
              }
           }
 loop_break:
-;
+      FLC.push_back(FileListCache::st_key(j->CacheName(),j->FileTime()),
+                    FileListCache::st_cache(j->Time(),j->DefaultVolume()));
 #if 1
     std::cout << " "<< found_in_cache<<"  "<<j->CacheName()<<' '
                     <<j->Time()<<' '<<j->DefaultVolume()<<'\n';
@@ -118,23 +119,6 @@ std::list<Soundfile> FileList::get_cd_file_list(const std::string &cd) const
 #include <fstream>
 #include <stdlib.h>
 
-void FileList::save_cache() const
-{
-   std::string sname=getenv("HOME")+std::string("/.rps.cache");
-   std::ofstream fo(sname.c_str());
-   std::cout << "Saving "<<sname<<'\n';
-   for(t_filemap::const_iterator i=filemap.begin();i!=filemap.end();++i)
-    {
-      for(std::list<Soundfile>::const_iterator j=i->second.begin();j!=i->second.end();++j)
-       {
-         fo << "Name:(("  <<j->CacheName()<<"))\t"
-            << "FileTime:(("<<j->FileTime()<<"))\t"
-            << "Length:(("<<j->Time()<<"))\t"
-            << "Volume:(("<<j->DefaultVolume()<<"))\n";
-       }   
-    }
-}
-
 void FileList::set_default_volume(const Soundfile &s,const int dv)
 {
   for(t_filemap::iterator i=filemap.begin();i!=filemap.end();++i)
@@ -152,7 +136,7 @@ int FileList::get_default_volume(const Soundfile &s) const
 
 //////////////////////////////////////////////////////////////////////////
 #include<vector>
-void FileListCache::load_cache() 
+void FileListCache::load() 
 {
    std::string sname=getenv("HOME")+std::string("/.rps.cache");
    std::ifstream fi(sname.c_str());
@@ -192,3 +176,15 @@ void FileListCache::load_cache()
     }
 }
 
+void FileListCache::save() const
+{
+   std::string sname=getenv("HOME")+std::string("/.rps.cache");
+   std::ofstream fo(sname.c_str());
+   std::cout << "Saving "<<sname<<'\n';
+   for(const_iterator i=begin();i!=end();++i)
+         fo << "Name:(("  <<i->first.name<<"))\t"
+            << "FileTime:(("<<i->first.file_time<<"))\t"
+            << "Length:(("<<i->second.time<<"))\t"
+            << "Volume:(("<<i->second.default_volume<<"))\n";
+   
+}
