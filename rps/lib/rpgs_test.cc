@@ -2,5 +2,5 @@
 
 main()
 {
-   RPS("/var/thoma/sound/testsound");   
+   RPS("/var/thoma/sound/RoleSound");   
 }

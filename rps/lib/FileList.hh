@@ -5,16 +5,14 @@
 
 class FileList
 {
-//   public:
-//      typedef std::map<std::string,std::vector<Soundfile> > t_filemap;
    private:
       typedef std::map<std::string,std::vector<Soundfile> > t_filemap;
       t_filemap filemap;
       std::string mainpath;
 
       void looking_for_subpaths();
-      void show_all_subdirs() const;
       void read_subdirs();
+      void get_file_info();
    public:
       FileList(const std::string &s);
 

@@ -18,7 +18,6 @@ class RPS
 
       bool repeat,kill_on_new;
 
-
    public:
       RPS(const std::string &s);
 
@@ -40,13 +39,12 @@ class RPS
       bool getKillOnNew() const {return kill_on_new;}
 
 #if ASDSUPPORT
+   private:
+      std::vector<asd_sound_identifier> vec_asd_list;
+      void remove_asd_client(const asd_sound_identifier &ain);
    public:
       static RPS *self;
       void new_asd_client(const std::string &s,Soundfile *s);
-   private:
-      static AsdConnection *asdcon;
-      std::vector<asd_sound_identifier> vec_asd_list;
-      void remove_asd_client(const asd_sound_identifier &ain);
       
 #endif
 

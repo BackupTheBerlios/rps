@@ -13,14 +13,16 @@ class asd_sound_identifier
 {
    private:
       std::string name;
+      int id;
       
    public:
-      asd_sound_identifier(const std::string &n) : name(n) {}
-      asd_sound_identifier() {}
+      asd_sound_identifier(const std::string &n);
+      asd_sound_identifier() : id(-1) {}
       
       bool operator==(const asd_sound_identifier &b) const
                {return name==b.name;}
 
+      int getID() const {return id;}
       const gchar* getASDI() const {return name.c_str();}
       gchar* getASDI() {return const_cast<gchar*>(name.c_str());}
 //      const gchar* operator()() const {return name.c_str();}

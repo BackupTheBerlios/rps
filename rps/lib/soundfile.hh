@@ -23,6 +23,7 @@ class SoundfileBase
          : path(p),name(n),type(None),minutes(0),seconds(0) 
             { set_type(name); }
 
+      void setTime(const int m, const int s) {minutes=m; seconds=s;}
       const std::string &Name() const {return name;}
       const std::string &Path() const {return path;}
       etype Type() const {return type;}
@@ -60,14 +61,14 @@ class Soundfile : public SoundfileBase
 #if ASDSUPPORT
    private:
       asd_sound_identifier asdi;
-//      Volume volume;
       gchar* prozent_to_asd(const int p);
    public:
       asd_sound_identifier getASDI() const {return asdi;}
 
+      std::string getClient() const {return asdi.getASDI();}
       void setClient(const asd_sound_identifier &a) {asdi=a;}
-      void set_volume(AsdConnection *c,const int v);
-      int get_volume(AsdConnection *c);
+      void set_volume(const int v);
+      int get_volume() const;
 #endif
       
 };

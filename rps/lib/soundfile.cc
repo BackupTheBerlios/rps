@@ -70,26 +70,34 @@ gchar* Soundfile::prozent_to_asd(const int p)
    return const_cast<gchar*>(s.c_str());
 }
 
-void Soundfile::set_volume(AsdConnection *c,const int v)
+void Soundfile::set_volume(const int v)
 {
    Volume volume;
    volume_parse(&volume, prozent_to_asd(v));
-   if (!asd_volume_set(c,  asdi.getASDI(), volume))
+   AsdConnection *asdcon = asd_connection_new(NULL) ;
+   if (!asd_volume_set(asdcon,  asdi.getASDI(), volume))
      perror("Could not set device volume");
 }
 
-int Soundfile::get_volume(AsdConnection *c)
+int Soundfile::get_volume() const
 {
   Volume volume;
-  if (!asd_volume_get(c, asdi.getASDI() , &volume))
-    perror("Could not get device volume");
+//std::cerr << "get volume for "<<asdi.getASDI()<<'\n';
+  AsdConnection *asdcon = asd_connection_new(NULL) ;
+  if (!asd_volume_get(asdcon, const_cast<gchar*>(asdi.getASDI()) , &volume))
+   {
+    std::cerr << "Could not get device volume for "<<asdi.getASDI()<<'\n';
+    return 99;
+   }
   else
   {
-    gchar t[256];
-    volume_to_string(&volume, t, sizeof(t));
-    g_print("Volume of device '%s' is %s\n",  asdi.getASDI(), t);
+    long int s=0;
+    for (int i=0;i<ASD_CHANNELS_MAX;++i) s+=volume.factor[i];
+    int v =  int(s/65535./ASD_CHANNELS_MAX*100.);
+//std::cout << "summe="<<s<<'\t'<< v<<'\n';
+    return v;
   }                                        
- return 98;
+ return -1;
 }
 
 #endif

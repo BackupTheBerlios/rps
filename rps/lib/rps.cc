@@ -4,7 +4,7 @@
 
 #if ASDSUPPORT
    RPS *RPS::self;
-   AsdConnection *RPS::asdcon;
+//   AsdConnection *RPS::asdcon;
 #endif
 
 
@@ -14,9 +14,9 @@ RPS::RPS(const std::string &s)
 {
 #if ASDSUPPORT
    self=this;  
-   if (!(asdcon = asd_connection_new(NULL)))
+   if (!(asd_connection_new(NULL)))
     {
-      perror("Could not create connection");
+      std::cout << "Could not create connection, please start asd\n";
       exit (1);
     }
 #endif
@@ -35,21 +35,25 @@ void RPS::remove_asd_client(const asd_sound_identifier &ain)
 
 void RPS::new_asd_client(const std::string &name,Soundfile *s)
 {
+std::cout << "clienet: "<<s->Name()<<"<->"<<name<<"<-\t";
    asd_sound_identifier ain(name);
    if(std::find(vec_asd_list.begin(),vec_asd_list.end(),ain)==vec_asd_list.end())
      {
+std::cout << " is NEW";
        vec_asd_list.push_back(ain);
-//       s->MpgPid();
        s->setClient(ain);
      }
+std::cout << "\n";
 }
 
 
 void _new_asd_client(ProtocolAsdListResponse* response, gpointer userdata)
 { 
   g_assert(response);
+//std::cout << response->shortname<<'\n';
   if(std::string(response->type)=="SOCKET")
    {
+std::cout << "Socket :"<<response->shortname<<'\n';
      Soundfile *s=static_cast<Soundfile*>(userdata);   
      RPS::self->new_asd_client(response->shortname,s);
    }
@@ -62,10 +66,15 @@ void RPS::play(Soundfile &s)
 //std::cout << "start play " <<kill_on_new<<' '<<repeat<<'\n';
    if(kill_on_new) stop_playing();
    s.play(getFileList().MainPath(),repeat);
-   playlist.push_back(s);
 #ifdef ASDSUPPORT
+   AsdConnection *asdcon = asd_connection_new(NULL) ;
+   if (!asdcon)
+     { perror("Could not create connection");
+       exit (1);
+     }  
    asd_list_sources(asdcon, _new_asd_client, &s);
 #endif
+   playlist.push_back(s);
 }
 
 
