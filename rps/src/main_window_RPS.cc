@@ -138,7 +138,7 @@ void main_window_RPS::fill_playlist()
   Gtk::VBox *box = manage(new class Gtk::VBox());
   for(PlayList::iterator i=rpgs.getPlayList().begin();i!=rpgs.getPlayList().end();++i)
    {
-      sound_widget *sw =  manage(new class sound_widget(*i));
+      sound_widget *sw = manage(new class sound_widget(*i));
       box->pack_start(*sw,false,false);
    }
   box->show_all();

@@ -8,7 +8,6 @@
 #include <asd_sound.hh>
 #endif
 
-
 #include <iostream>
 class SoundfileBase
 {
@@ -57,17 +56,20 @@ class SoundfileBase
 
 class Soundfile : public SoundfileBase
 {
-      bool is_played, repeat;
+      time_t start_time;
+      bool repeat;
       int mpgpid, asdpid;
 
    public:
-      Soundfile() : is_played(false),repeat(false),mpgpid(0),asdpid(0) {}
+      Soundfile() : start_time(0),repeat(false),mpgpid(0),asdpid(0) {}
       Soundfile(const std::string &p,const std::string &n,const time_t t)
-         : SoundfileBase(p,n,t), is_played(false),repeat(false) {}
+         : SoundfileBase(p,n,t), start_time(0),repeat(false) {}
 
       std::string IsPlayedStr() const;
       std::string RepeatStr() const;
-      bool Played() const {return is_played;}
+      bool Played() const {return start_time!=0;}
+      time_t StartTime() const {return start_time;}
+      void Restart(time_t t) {start_time=t;}
 
       void play(const bool repeatbool) ; 
       void stop_playing();

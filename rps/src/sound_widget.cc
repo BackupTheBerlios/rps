@@ -19,7 +19,8 @@ sound_widget::sound_widget(Soundfile &s)
    Gtk::Label *lrepeat  = manage(new class Gtk::Label(s.RepeatStr()));
    container->attach(*lrepeat,0,1,0,1,Gtk::SHRINK,Gtk::SHRINK);
 
-   Gtk::Label *ltime  = manage(new class Gtk::Label(s.Time()));
+//   Gtk::Label *ltime  = manage(new class Gtk::Label(s.Time()));
+   Gtk::Label *ltime  = manage(new class Gtk::Label(get_time_text()));
    container->attach(*ltime,1,2,0,1,Gtk::SHRINK,Gtk::SHRINK);
 
    Gtk::Button *stop  = manage(new class Gtk::Button("Stop"));
@@ -41,7 +42,7 @@ sound_widget::sound_widget(Soundfile &s)
    add(*container);
    show_all();
 
-  start_time =  time(NULL);
+//  start_time =  time(NULL);
   Glib::signal_timeout().connect(SigC::bind(SigC::slot(
       *this,&sound_widget::timeout_handler), ltime),1000);
    
@@ -51,18 +52,23 @@ sound_widget::sound_widget(Soundfile &s)
 #include <itos.hh>
 bool sound_widget::timeout_handler(Gtk::Label *l)
 {
+   l->set_text(get_time_text());
+   return true;
+}
+
+std::string sound_widget::get_time_text() const
+{
    time_t tnow = time(NULL);
-   time_t ire = sound.Seconds() - (tnow-start_time);
+   time_t ire = sound.Seconds() - (tnow-sound.StartTime());
 
-   if(ire<0) { start_time = tnow-1; ire=sound.Seconds()-1; }
-
+//std::cout << l->get_text()<<'\t'<<sound.StartTime()<<'\t'<<ire<<'\n';
+   if(ire<0) { sound.Restart(tnow-1); ire=sound.Seconds()-1; }
 
    int min = int(ire/60+0.5);
    int sec = ire%60;
    std::string sre = itos(min)+":"+itos(sec,true);
 //   std::cout << ire<<'\t'<<sre<<'\n';
-   l->set_text(sre);
-   return true;
+   return sre;
 }
 
 

@@ -113,7 +113,7 @@ void RPS::play(const std::string &cd)
    PSL=filelist.get_cd_file_list(cd);
    if(PSL.empty()) return;
    play(PSL.front());
-   PSL.pop_front();
+//   PSL.pop_front();
 }
 
 
@@ -135,11 +135,13 @@ void RPS::remove_from_playlist(const Soundfile &s, const bool kill_pids)
 {
    playlist.remove(s,kill_pids);
    remove_asd_client(s.getASDI());
-   if(!PSL.empty())  { play(PSL.front()); PSL.pop_front();}
+   if(!PSL.empty() && PSL.front()==s)  
+      {  PSL.pop_front();play(PSL.front());}
 }
 
 void RPS::stop_playing()
 {
+ PSL.clear();
 reloop:
  for(PlayList::iterator i=playlist.begin();i!=playlist.end();++i)
    {

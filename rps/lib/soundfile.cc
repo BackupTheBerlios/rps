@@ -27,12 +27,12 @@ void Soundfile::play(const bool repeatbool)
      _exit(errno);
     }
    close(fd[0]); close(fd[1]);
-   is_played=true;
+   start_time = ::time(NULL);
 }
 
 void Soundfile::stop_playing()
 {
-   is_played=false;
+   start_time = 0;
    repeat=false;
    asdi=asd_sound_identifier();
 }
@@ -45,7 +45,7 @@ std::string Soundfile::RepeatStr() const
 
 std::string Soundfile::IsPlayedStr() const
 {
-   if(is_played) return "(P)";
+   if(Played()) return "(P)";
    else return "";
 }
 
