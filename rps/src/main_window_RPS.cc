@@ -72,16 +72,12 @@ void main_window_RPS::fill_columns_recursive(const int level,
      if(i->first.sub_level == level) 
       {
         if( !parentpath.empty() && parentpath!=i->first.subpath ) continue;
-
         if(prow==NULL) row = *(m_refTreeModelSelect->append()); 
         else row = *(m_refTreeModelSelect->append(prow->children()));
-
         row[m_ColumnsSound.col_name] = i->first.subpath;
-
         if(i->first.path.find("/CDs/") == std::string::npos)
              row[m_ColumnsSound.is_cd] = false;
         else row[m_ColumnsSound.is_cd] = true;
-
         fill_soundfiles(i->second,row);
       }
      else if(i->first.sub_level == level+1)
@@ -101,7 +97,29 @@ void main_window_RPS::fill_columns()
   treeview_main->columns_autosize();
 
   fill_columns_recursive(1);
+#if 0
+  //Fill the TreeView's model
+  Gtk::TreeModel::Row cd_row = *(m_refTreeModelSelect->append()); 
+  cd_row[m_ColumnsSound.col_name] = "CDs";
 
+  for(FileList::const_iterator i=rpgs.getFileList().begin();i!=rpgs.getFileList().end();++i)
+   {
+     if(i->first.path.find("/CDs/") == std::string::npos )
+      {
+        Gtk::TreeModel::Row row = *(m_refTreeModelSelect->append());
+        row[m_ColumnsSound.col_name] = i->first.subpath;
+        row[m_ColumnsSound.is_cd] = false;
+        fill_soundfiles(i->second,row);
+      }
+     else 
+      {
+        Gtk::TreeModel::Row row = *(m_refTreeModelSelect->append(cd_row.children()));
+        row[m_ColumnsSound.col_name] = i->first.subpath;
+        row[m_ColumnsSound.is_cd] = true;
+        fill_soundfiles(i->second,row);
+      }
+   }  
+#endif
   //Add the TreeView's view columns:
   treeview_main->append_column("Sound", m_ColumnsSound.col_name);
 #if 0
