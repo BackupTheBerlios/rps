@@ -51,7 +51,6 @@ void FileList::get_file_info()
       std::cout << i->first.path<<'\t'<<i->first.sub_level<<'\n';
       for(std::list<Soundfile>::iterator j=i->second.begin();j!=i->second.end();++j)
        {
-         std::string cmd="qmp3info -s "+j->Filename();
 
          bool found_in_cache ; 
          const std::map<std::string,FileListCache::st_cache>::const_iterator ci
@@ -69,9 +68,9 @@ void FileList::get_file_info()
              else j->setTime(ci->second.time);
              j->setDefaultVolume(ci->second.default_volume);
           }
-
-         if(!found_in_cache)
+         else
           {
+            std::string cmd="qmp3info -s "+j->Filename();
             char buf[100];
             FILE *ptr;
             if ((ptr = popen(cmd.c_str(), "r")) != NULL)
