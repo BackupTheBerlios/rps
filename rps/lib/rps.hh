@@ -19,7 +19,8 @@ class RPS
       bool repeat,kill_on_new;
 
       void stop_playing();
-      void save_conf();
+      void save_conf() const;
+      void load_conf(std::string &path) const;
 
       std::list<Soundfile> PSL;
    public:

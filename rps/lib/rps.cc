@@ -19,14 +19,14 @@ RPS::RPS(const std::string &newpath)
     }
 #endif
 
-   std::string path;
+   std::string path="None in ~/.rps.rc";
    load_conf(path);
    if(path.empty() && newpath.empty()) 
      { std::cerr << " Unknown pathes: \n\t"<<path<<"\n\t"<<newpath
                  <<"\n , please use the -d<path> option\n";
        exit(1);
      }
-
+std::cout << "PPPPP: "<<path<<'\t'<<newpath<<'\n';
    if(!newpath.empty()) path=newpath;
    filelist=FileList(path);
 }
@@ -126,6 +126,7 @@ reloop:
 }
 
 
+#include <fstream>
 void RPS::save_conf() const
 {
    std::string sname=getenv("HOME")+std::string("/.rps.rc");
