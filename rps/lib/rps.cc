@@ -144,11 +144,12 @@ void RPS::load_conf(std::string &path) const
    std::cout << "Loading "<<sname<<'\n';
    while(true)
      {
+       std::string search_string="Path=";
        std::string line;
        std::getline(fi,line);
        if(!fi.good()) break; 
-       std::string::size_type _a = line.find_last_of("Path=");
+       std::string::size_type _a = line.find(search_string);
        if(_a!=std::string::npos) 
-         path=line.substr(_a,std::string::npos);
+         path=line.substr(search_string.size(),std::string::npos);
      }                            
 }
