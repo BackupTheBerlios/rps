@@ -13,8 +13,13 @@ void Soundfile::play(const bool repeatbool)
     {close(fd[0]); 
      dup2(fd[1],1);
      close(fd[1]); 
-     execl("/usr/bin/mpg123",  "mpg123","-sq","-b10240",
+#if 0
+     execl("/usr/bin/mpg123",  "mpg123","-sq","-b1024",
           repeat?"-Z":"-q",Filename().c_str(),0);
+#else
+     execl("/usr/bin/mpg123",  "mpg123","-s",
+          repeat?"-Z":"-q",Filename().c_str(),0);
+#endif
      perror("/usr/bin/mpg123");
      _exit(errno);
     }
