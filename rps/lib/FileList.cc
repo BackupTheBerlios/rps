@@ -187,9 +187,11 @@ void FileListCache::save() const
    std::ofstream fo(sname.c_str());
    std::cout << "Saving "<<sname<<'\n';
    for(const_iterator i=begin();i!=end();++i)
+    {
+      if (!i->second.time.empty())
          fo << "Name:(("  <<i->first.name<<"))\t"
             << "FileTime:(("<<i->first.file_time<<"))\t"
             << "Length:(("<<i->second.time<<"))\t"
             << "Volume:(("<<i->second.default_volume<<"))\n";
-   
+    }   
 }
