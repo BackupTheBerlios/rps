@@ -1,13 +1,12 @@
 #include <soundfile.hh>
 #include <unistd.h>
 #include <errno.h>
-#include <itos.hh>
-
+//#include <itos.hh>
 
 #include <iostream>
 void Soundfile::play(const std::string &mainpath,const bool repeatbool)
 {
-   std::string file = mainpath+Filename();
+   std::string file = Filename();
 
    int fd[2];
    if (pipe(fd)) { perror("pipe"); return; }
@@ -31,9 +30,21 @@ void Soundfile::play(const std::string &mainpath,const bool repeatbool)
    close(fd[0]); close(fd[1]);
    is_played=true;
    repeat=repeatbool;
-//std::cout << " play "<<file<<'\t' << mpgpid<<'\t'<<asdpid<<'\t'<<repeat<<'\n';
+//   start_time=::time(NULL);
+
+//Gtk::Main::timeout.connect(slot(this,&Soundfile::timeout),10);
+
+//   timeout.connect(slot(&foo),10)
+//std::cout << " play "<<file<<'\t' << mpgpid<<'\t'<<asdpid<<'\t'<<repeat
+//   <<'\t'<<start_time<<'\n';
 }
 
+#if 0
+void Soundfile::timeout(const time_t start_time)
+{
+   std::cout << "Runtime: "<<   ::time(NULL)-start_time;
+}
+#endif
 void Soundfile::stop_playing()
 {
    is_played=false;
@@ -107,6 +118,17 @@ int Soundfile::get_volume() const
 
 /****************************************************************************/
 #include <vector>
+void SoundfileBase::set_subpath()
+{
+   std::string::size_type st = path.find_last_of("/");
+   if(st == std::string::npos)
+     std::cerr << "Strange error while lookling for subpath in "<<path<<'\n';
+   else
+     {
+       subpath=path.substr(st+1,std::string::npos);
+     }
+}
+
 void SoundfileBase::set_type(const std::string &n)
 {
    std::vector<std::pair<etype,std::string> > pt;
@@ -130,22 +152,34 @@ void SoundfileBase::setTime(const int m, const int s)
 {
    minutes=m; 
    seconds=s;
-   time = itos(m)+":"+itos(s);
+   if(s>=10) time = itos(m)+":"+itos(s);
+   else     time = itos(m)+":0"+itos(s);
 }
 
 
 void SoundfileBase::setTime(const std::string &_time) 
 {
+   std::string smin,ssec;
    if(_time.find_last_of("=>")!=std::string::npos && 
       _time.find_last_of(":")!=std::string::npos  &&
       _time.find_last_of("\n")!=std::string::npos)
      {
-       std::string smin=_time.substr(_time.find_last_of("=>")+1,_time.find(":")-_time.find_last_of("=>")-1);
-       std::string ssec=_time.substr(_time.find(":")+1,_time.find("\n")-_time.find(":")-1);
-       int min = atoi(smin.c_str());
-       int sec = atoi(ssec.c_str());
-       setTime(min,sec);
+       smin=_time.substr(_time.find_last_of("=>")+1,_time.find(":")-_time.find_last_of("=>")-1);
+       ssec=_time.substr(_time.find(":")+1,_time.find("\n")-_time.find(":")-1);
      }
+   else if(_time.find_last_of(":")!=std::string::npos)
+     {
+       smin=_time.substr(0,_time.find(":"));
+       ssec=_time.substr(_time.find(":")+1,std::string::npos);
+     }
+   else
+     {
+       std::cout << "unknown time\n";
+       return;
+     }
+    int min = atoi(smin.c_str());
+    int sec = atoi(ssec.c_str());
+    setTime(min,sec);
 }
 
 

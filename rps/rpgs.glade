@@ -12,6 +12,7 @@
   <property name="modal">False</property>
   <property name="resizable">True</property>
   <property name="destroy_with_parent">False</property>
+  <signal name="delete_event" handler="on_main_window_RPS_delete_event" last_modification_time="Thu, 02 Oct 2003 14:32:56 GMT"/>
 
   <child>
     <widget class="GtkEventBox" id="eventbox1">
@@ -25,47 +26,73 @@
 	  <property name="spacing">0</property>
 
 	  <child>
-	    <widget class="GtkToolbar" id="toolbar_main">
+	    <widget class="GtkAlignment" id="alignment1">
 	      <property name="visible">True</property>
-	      <property name="orientation">GTK_ORIENTATION_HORIZONTAL</property>
-	      <property name="toolbar_style">GTK_TOOLBAR_BOTH</property>
-	      <property name="tooltips">True</property>
+	      <property name="xalign">0.5</property>
+	      <property name="yalign">0.5</property>
+	      <property name="xscale">1</property>
+	      <property name="yscale">1</property>
 
 	      <child>
-		<widget class="button" id="button_quit">
+		<widget class="GtkToolbar" id="toolbar_main">
 		  <property name="visible">True</property>
-		  <property name="can_focus">True</property>
-		  <property name="has_focus">True</property>
-		  <property name="label" translatable="yes">Quit</property>
-		  <property name="use_underline">True</property>
-		  <property name="stock_pixmap">gtk-quit</property>
-		  <signal name="clicked" handler="on_button_quit_clicked" last_modification_time="Mon, 22 Sep 2003 09:51:47 GMT"/>
-		</widget>
-	      </child>
+		  <property name="orientation">GTK_ORIENTATION_HORIZONTAL</property>
+		  <property name="toolbar_style">GTK_TOOLBAR_BOTH</property>
+		  <property name="tooltips">True</property>
 
-	      <child>
-		<widget class="toggle" id="togglebutton_repeat">
-		  <property agent="glademm" name="cxx_visibility">protected</property>
-		  <property name="visible">True</property>
-		  <property name="label" translatable="yes">Repeat</property>
-		  <property name="use_underline">True</property>
-		  <property name="stock_pixmap">gtk-refresh</property>
-		  <property name="active">False</property>
-		  <property name="inconsistent">False</property>
-		  <signal name="toggled" handler="on_togglebutton_repeat_toggled" last_modification_time="Tue, 23 Sep 2003 08:23:47 GMT"/>
-		</widget>
-	      </child>
+		  <child>
+		    <widget class="button" id="button_quit">
+		      <property name="visible">True</property>
+		      <property name="can_focus">True</property>
+		      <property name="has_focus">True</property>
+		      <property name="label" translatable="yes">Quit</property>
+		      <property name="use_underline">True</property>
+		      <property name="stock_pixmap">gtk-quit</property>
+		      <signal name="clicked" handler="on_button_quit_clicked" last_modification_time="Mon, 22 Sep 2003 09:51:47 GMT"/>
+		    </widget>
+		  </child>
 
-	      <child>
-		<widget class="toggle" id="togglebutton_kill_on_new">
-		  <property agent="glademm" name="cxx_visibility">protected</property>
-		  <property name="visible">True</property>
-		  <property name="label" translatable="yes">Kill on new</property>
-		  <property name="use_underline">True</property>
-		  <property name="stock_pixmap">gtk-cut</property>
-		  <property name="active">False</property>
-		  <property name="inconsistent">False</property>
-		  <signal name="toggled" handler="on_togglebutton_kill_on_new_toggled" last_modification_time="Tue, 23 Sep 2003 10:29:16 GMT"/>
+		  <child>
+		    <widget class="toggle" id="togglebutton_play_dir">
+		      <property agent="glademm" name="cxx_visibility">protected</property>
+		      <property name="visible">True</property>
+		      <property name="can_focus">True</property>
+		      <property name="label" translatable="yes">Play Directory</property>
+		      <property name="use_underline">True</property>
+		      <property name="stock_pixmap">gtk-jump-to</property>
+		      <property name="active">False</property>
+		      <property name="inconsistent">False</property>
+		      <signal name="toggled" handler="on_togglebutton_play_dir_toggled" last_modification_time="Sun, 05 Oct 2003 06:42:50 GMT"/>
+		    </widget>
+		  </child>
+
+		  <child>
+		    <widget class="toggle" id="togglebutton_repeat">
+		      <property agent="glademm" name="cxx_visibility">protected</property>
+		      <property name="visible">True</property>
+		      <property name="can_focus">True</property>
+		      <property name="label" translatable="yes">Repeat</property>
+		      <property name="use_underline">True</property>
+		      <property name="stock_pixmap">gtk-refresh</property>
+		      <property name="active">False</property>
+		      <property name="inconsistent">False</property>
+		      <signal name="toggled" handler="on_togglebutton_repeat_toggled" last_modification_time="Tue, 23 Sep 2003 08:23:47 GMT"/>
+		    </widget>
+		  </child>
+
+		  <child>
+		    <widget class="toggle" id="togglebutton_kill_on_new">
+		      <property agent="glademm" name="cxx_visibility">protected</property>
+		      <property name="visible">True</property>
+		      <property name="can_focus">True</property>
+		      <property name="label" translatable="yes">Kill on new</property>
+		      <property name="use_underline">True</property>
+		      <property name="stock_pixmap">gtk-cut</property>
+		      <property name="active">False</property>
+		      <property name="inconsistent">False</property>
+		      <signal name="toggled" handler="on_togglebutton_kill_on_new_toggled" last_modification_time="Tue, 23 Sep 2003 10:29:16 GMT"/>
+		    </widget>
+		  </child>
 		</widget>
 	      </child>
 	    </widget>
@@ -119,7 +146,9 @@
 	      </child>
 
 	      <child>
-		<widget class="GtkScrolledWindow" id="scrolledwindow2">
+		<widget class="GtkScrolledWindow" id="scrolledwindow_playlist">
+		  <property name="width_request">250</property>
+		  <property agent="glademm" name="cxx_visibility">protected</property>
 		  <property name="visible">True</property>
 		  <property name="can_focus">True</property>
 		  <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
@@ -128,22 +157,20 @@
 		  <property name="window_placement">GTK_CORNER_TOP_LEFT</property>
 
 		  <child>
-		    <widget class="GtkTreeView" id="treeview_playlist">
+		    <widget class="GtkViewport" id="viewport_playlist">
 		      <property agent="glademm" name="cxx_visibility">protected</property>
 		      <property name="visible">True</property>
-		      <property name="can_focus">True</property>
-		      <property name="headers_visible">True</property>
-		      <property name="rules_hint">False</property>
-		      <property name="reorderable">False</property>
-		      <property name="enable_search">True</property>
-		      <signal name="row_activated" handler="on_treeview_playlist_row_activated" last_modification_time="Tue, 23 Sep 2003 09:20:28 GMT"/>
-		      <signal name="button_release_event" handler="on_treeview_playlist_button_release_event" last_modification_time="Tue, 23 Sep 2003 09:20:43 GMT"/>
+		      <property name="shadow_type">GTK_SHADOW_IN</property>
+
+		      <child>
+			<placeholder/>
+		      </child>
 		    </widget>
 		  </child>
 		</widget>
 		<packing>
 		  <property name="padding">0</property>
-		  <property name="expand">True</property>
+		  <property name="expand">False</property>
 		  <property name="fill">True</property>
 		</packing>
 	      </child>
@@ -155,6 +182,69 @@
 	    </packing>
 	  </child>
 	</widget>
+      </child>
+    </widget>
+  </child>
+</widget>
+
+<widget class="GtkWindow" id="window1">
+  <property name="visible">True</property>
+  <property name="title" translatable="yes">window1</property>
+  <property name="type">GTK_WINDOW_TOPLEVEL</property>
+  <property name="window_position">GTK_WIN_POS_NONE</property>
+  <property name="modal">False</property>
+  <property name="resizable">True</property>
+  <property name="destroy_with_parent">False</property>
+
+  <child>
+    <widget class="GtkTable" id="table1">
+      <property name="visible">True</property>
+      <property name="n_rows">3</property>
+      <property name="n_columns">3</property>
+      <property name="homogeneous">False</property>
+      <property name="row_spacing">0</property>
+      <property name="column_spacing">0</property>
+
+      <child>
+	<widget class="GtkLabel" id="label1">
+	  <property name="visible">True</property>
+	  <property name="label" translatable="yes">label1</property>
+	  <property name="use_underline">False</property>
+	  <property name="use_markup">False</property>
+	  <property name="justify">GTK_JUSTIFY_LEFT</property>
+	  <property name="wrap">False</property>
+	  <property name="selectable">False</property>
+	  <property name="xalign">0</property>
+	  <property name="yalign">0.5</property>
+	  <property name="xpad">0</property>
+	  <property name="ypad">0</property>
+	</widget>
+	<packing>
+	  <property name="left_attach">2</property>
+	  <property name="right_attach">3</property>
+	  <property name="top_attach">1</property>
+	  <property name="bottom_attach">2</property>
+	  <property name="x_options">fill</property>
+	  <property name="y_options"></property>
+	</packing>
+      </child>
+
+      <child>
+	<widget class="GtkButton" id="button1">
+	  <property name="visible">True</property>
+	  <property name="can_focus">True</property>
+	  <property name="label" translatable="yes">button1</property>
+	  <property name="use_underline">True</property>
+	  <property name="relief">GTK_RELIEF_NORMAL</property>
+	</widget>
+	<packing>
+	  <property name="left_attach">2</property>
+	  <property name="right_attach">3</property>
+	  <property name="top_attach">0</property>
+	  <property name="bottom_attach">1</property>
+	  <property name="x_options">fill</property>
+	  <property name="y_options"></property>
+	</packing>
       </child>
     </widget>
   </child>

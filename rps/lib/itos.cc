@@ -1,9 +1,10 @@
 #include <itos.hh>
 
-std::string itos(int i)
+std::string itos(const int i,const bool seconds)
 {
  char buffer[100];
- snprintf(buffer,sizeof buffer,"%i",i);
+ if(seconds) snprintf(buffer,sizeof buffer,"%02i",i);
+ else        snprintf(buffer,sizeof buffer,"%i",i);
  return(buffer);
 }
 

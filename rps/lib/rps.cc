@@ -34,15 +34,13 @@ void RPS::remove_asd_client(const asd_sound_identifier &ain)
 
 void RPS::new_asd_client(const std::string &name,Soundfile *s)
 {
-std::cout << "clienet: "<<s->Name()<<"<->"<<name<<"<-\t";
    asd_sound_identifier ain(name);
    if(std::find(vec_asd_list.begin(),vec_asd_list.end(),ain)==vec_asd_list.end())
      {
-std::cout << " is NEW";
        vec_asd_list.push_back(ain);
        s->setClient(ain);
+       s->set_volume(filelist.get_default_volume(*s));
      }
-std::cout << "\n";
 }
 
 
@@ -52,7 +50,7 @@ void _new_asd_client(ProtocolAsdListResponse* response, gpointer userdata)
 //std::cout << response->shortname<<'\n';
   if(std::string(response->type)=="SOCKET")
    {
-std::cout << "Socket :"<<response->shortname<<'\n';
+//std::cout << "Socket :"<<response->shortname<<'\n';
      Soundfile *s=static_cast<Soundfile*>(userdata);   
      RPS::self->new_asd_client(response->shortname,s);
    }
@@ -62,8 +60,10 @@ std::cout << "Socket :"<<response->shortname<<'\n';
 
 void RPS::play(Soundfile &s)
 {
-//std::cout << "start play " <<kill_on_new<<' '<<repeat<<'\n';
+//std::cout << "start play " <<kill_on_new<<' '<<repeat<<'\t'
+//<<s.DefaultVolume()<<'\n';
    if(kill_on_new) stop_playing();
+
    s.play(getFileList().MainPath(),repeat);
 #ifdef ASDSUPPORT
    AsdConnection *asdcon = asd_connection_new(NULL) ;
@@ -99,12 +99,9 @@ void RPS::remove_from_playlist(const Soundfile &s, const bool kill_pids)
 
 void RPS::stop_playing()
 {
-//std::cout << "Stop playing:\t"<<playlist.size()<<'\t';
 reloop:
  for(PlayList::iterator i=playlist.begin();i!=playlist.end();++i)
    {
-      if(playlist.empty()) return;
-//std::cout << "kill all:"<<(*i).AsdPid()<<"\t"<<(*i).MpgPid()<<'\n';
       remove_from_playlist(*i,true);
       goto reloop;
    }  

@@ -8,56 +8,49 @@ FileList::FileList(const std::string &s)
 : mainpath(s) 
 {
    FLC.load_cache();
-   looking_for_subpaths();
-   read_subdirs();
+   st_key key(mainpath,0);
+   read_dir(key);
+
    get_file_info();
    for(t_filemap::iterator i=filemap.begin();i!=filemap.end();++i)
       std::sort(i->second.begin(),i->second.end());
 }
 
-
-void FileList::looking_for_subpaths()
+void FileList::read_dir(const st_key &key)
 {
-     DIR *dir=opendir(mainpath.c_str());
-     if(!dir) { std::cerr << "\n directory "<<mainpath<<" not found\n";
-                exit(1);}
-     struct stat sa;
-     while(true)
-      {
-        dirent *ent=readdir(dir);
-        if(ent==NULL) break;
-        stat((mainpath+"/"+ent->d_name).c_str(),&sa);
-        if( sa.st_mode & S_IFREG ) continue;
-        if( std::string(ent->d_name).find(".")==0) continue;
-           filemap[ent->d_name];
-      }
-}
-
-void FileList::read_subdirs()
-{
-   std::vector<t_filemap::iterator> nodirs;
-   for(t_filemap::iterator i=filemap.begin();i!=filemap.end();++i)
+   DIR *dir=opendir(key.path.c_str());
+   if(!dir) { std::cerr << "\n directory "<<key.path<<" not found\n";
+              exit(1);}
+   while(true)
     {
-      DIR *dir=opendir((mainpath+"/"+i->first).c_str());
-      if(!dir) continue;
-      while(true)
+      dirent *ent=readdir(dir);
+      if(ent==NULL) break;
+      if(std::string(ent->d_name).find(".")==0) continue;
+
+      struct stat sa;
+      stat((key.path+"/"+ent->d_name).c_str(),&sa);
+      if(sa.st_mode & S_IFREG )
        {
-        dirent *ent=readdir(dir);
-        if(ent==NULL) break;
-        if( std::string(ent->d_name).find(".")!=0)
-           i->second.push_back(Soundfile(i->first,ent->d_name));
-       }    
-    }
+         filemap[key].push_back(Soundfile(key.path,ent->d_name));
+//std::cout <<'#'<<ent->d_name <<"#  F\t"<<key.path<<'\n';
+       }
+      if(sa.st_mode & S_IFDIR)
+       {
+         st_key nkey(key.path+"/"+ent->d_name,key.sub_level+1);
+         read_dir(nkey);
+       }
+    }   
 }
+
 
 void FileList::get_file_info() 
 {
    for(t_filemap::iterator i=filemap.begin();i!=filemap.end();++i)
     {
-      std::cout << i->first<<'\n';
+      std::cout << i->first.path<<'\t'<<i->first.sub_level<<'\n';
       for(std::vector<Soundfile>::iterator j=i->second.begin();j!=i->second.end();++j)
        {
-         std::string cmd="qmp3info -s "+mainpath+j->Filename();
+         std::string cmd="qmp3info -s "+j->Filename();
 
          bool found_in_cache ; 
          const std::map<std::string,FileListCache::st_cache>::const_iterator ci
@@ -68,10 +61,15 @@ void FileList::get_file_info()
 
          if (found_in_cache)
           {
-std::cout << "cached time ="<<ci->second.time<<'\n';
+//std::cout << ci->first<<'\n';
              j->setTime(ci->second.time);
+//std::cout << j->Filename()<<" cached time ="<<ci->second.time<<' '<<j->Time()<<'\n';
+             if(ci->second.time.empty()) found_in_cache=false;
+             else j->setTime(ci->second.time);
+             j->setDefaultVolume(ci->second.default_volume);
           }
-         else
+
+         if(!found_in_cache)
           {
             char buf[100];
             FILE *ptr;
@@ -83,7 +81,8 @@ std::cout << "cached time ="<<ci->second.time<<'\n';
                }
             pclose(ptr);
           }
-         std::cout << "   "<<j->Filename()<<' '<<j->Time()<<'\n';
+         std::cout << "   "<<j->Filename()<<' '<<j->Time()<<' '
+                   <<j->DefaultVolume()<<'\n';
        }
     }
 }
@@ -106,6 +105,21 @@ void FileList::save_cache() const
        }   
     }
 }
+
+void FileList::set_default_volume(const Soundfile &s,const int dv)
+{
+  for(t_filemap::iterator i=filemap.begin();i!=filemap.end();++i)
+     for(std::vector<Soundfile>::iterator j=i->second.begin();j!=i->second.end();++j)
+        if (j->Name()==s.Name()) j->setDefaultVolume(dv) ;
+}
+
+int FileList::get_default_volume(const Soundfile &s) const
+{
+  for(t_filemap::const_iterator i=filemap.begin();i!=filemap.end();++i)
+     for(std::vector<Soundfile>::const_iterator j=i->second.begin();j!=i->second.end();++j)
+        if (j->Name()==s.Name()) return j->DefaultVolume() ;
+}
+
 
 //////////////////////////////////////////////////////////////////////////
 

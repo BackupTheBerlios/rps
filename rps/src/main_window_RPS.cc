@@ -27,10 +27,11 @@ main_window_RPS::main_window_RPS(const std::string &m)
    signal(SIGCHLD,&signalhandler);
    togglebutton_repeat->set_active(rpgs.getRepeat());
    togglebutton_kill_on_new->set_active(rpgs.getKillOnNew());
+   togglebutton_play_dir->set_active(true);
    fill_columns();
    
    get_window()->move(10,80);
-   set_size_request(700,600);
+   set_size_request(800,700);
 }
 
 
@@ -69,17 +70,23 @@ void main_window_RPS::fill_columns()
   treeview_main->columns_autosize();
 
   //Fill the TreeView's model
+  Gtk::TreeModel::Row cd_row = *(m_refTreeModelSelect->append()); 
+  cd_row[m_ColumnsSound.col1] = "CDs";
   for(FileList::const_iterator i=rpgs.getFileList().begin();i!=rpgs.getFileList().end();++i)
    {
-     Gtk::TreeModel::Row row = *(m_refTreeModelSelect->append());
-     row[m_ColumnsSound.col1] = i->first;
-     for(std::vector<Soundfile>::const_iterator j=i->second.begin();j!=i->second.end();++j)
+     if(i->first.path.find("/CDs/") == std::string::npos )
       {
-        Gtk::TreeModel::Row childrow = *(m_refTreeModelSelect->append(row.children()));
-//        childrow[m_ColumnsSound.col1] = i->first;
-        childrow[m_ColumnsSound.col2] = j->Name();
-        childrow[m_ColumnsSound.col_time] = j->Time();
-        childrow[m_ColumnsSound.sound] = *j;
+        Gtk::TreeModel::Row row = *(m_refTreeModelSelect->append());
+        row[m_ColumnsSound.col1] = i->first.subpath;
+//        row[m_ColumnsSound.is_cd] = false;
+        fill_soundfiles(i->second,row);
+      }
+     else 
+      {
+        Gtk::TreeModel::Row row = *(m_refTreeModelSelect->append(cd_row.children()));
+        row[m_ColumnsSound.col1] = i->first.subpath;
+//        row[m_ColumnsSound.is_cd] = true;
+        fill_soundfiles(i->second,row);
       }
    }  
   //Add the TreeView's view columns:
@@ -90,6 +97,19 @@ void main_window_RPS::fill_columns()
   treeview_main->set_enable_search(true);
   treeview_main->grab_focus();
 }                    
+
+
+void main_window_RPS::fill_soundfiles(const std::vector<Soundfile> &VS,Gtk::TreeModel::Row &row)
+{
+   for(std::vector<Soundfile>::const_iterator j=VS.begin();j!=VS.end();++j)
+    {
+      Gtk::TreeModel::Row childrow = *(m_refTreeModelSelect->append(row.children()));
+//      childrow[m_ColumnsSound.col1] = j->SubPath();
+      childrow[m_ColumnsSound.col2] = j->Name();
+      childrow[m_ColumnsSound.col_time] = j->Time();
+      childrow[m_ColumnsSound.sound] = *j;
+    }
+}
 
 void main_window_RPS::fill_playlist()
 {
@@ -111,14 +131,27 @@ void main_window_RPS::on_button_quit_clicked()
 
 main_window_RPS::~main_window_RPS()
 {
-   rpgs.stop_playing();
-//    rpgs.getFileList().save_cache();
+//   rpgs.stop_playing();
 }
 
 bool main_window_RPS::on_main_window_RPS_delete_event(GdkEventAny *ev)
 {  
    std::cout << "delete event\n";
    return false;
+}
+
+void main_window_RPS::on_togglebutton_play_dir_toggled()
+{
+std::cout << "ACI\n";
+   Glib::RefPtr<Gtk::TreeSelection> sel = treeview_main->get_selection();
+   Gtk::TreeModel::iterator iter = sel->get_selected();
+   if(iter) //If anything is selected
+    {
+      Gtk::TreeModel::Row row = *iter;
+      std::string s1 = row[m_ColumnsSound.col1];
+      std::string s2 = row[m_ColumnsSound.col2];
+std::cout << s1 <<'\t'<<s2<<'\t'<<  '\n';
+    }
 }
 
 
@@ -136,8 +169,15 @@ void main_window_RPS::entry_selected()
    if(iter) //If anything is selected
     {
       Gtk::TreeModel::Row row = *iter;
+      std::string col1 = row[m_ColumnsSound.col1];
+      std::string col2 = row[m_ColumnsSound.col2];
       Soundfile s = row[m_ColumnsSound.sound];
-//std::cout <<'\t'<< "\tSound: "<<s.Name()<<' '<<s.TypeStr()<<'\n';
+      bool playdir = togglebutton_play_dir->get_active();
+std::cout <<(col1=="CDs") <<' '<<!col2.empty()<<'\t'<<'\t'<<playdir<<'\n';
+      if(col1=="CDs" && !col2.empty() && togglebutton_play_dir->get_active())
+       {
+std::cout << "PLay "<< col2<<'\n';
+       }
       if(!s.Name().empty()) 
         {
          rpgs.play(s);
@@ -148,7 +188,8 @@ void main_window_RPS::entry_selected()
 void main_window_RPS::on_treeview_main_row_activated(const Gtk::TreeModel::Path& path, Gtk::TreeViewColumn* column)
 {  
    if(treeview_main->row_expanded(path)) treeview_main->collapse_row(path);
-   else                                  treeview_main->expand_row(path,true);
+   else                                  treeview_main->expand_row(path,false);
+//std::cout << path.get_depth()<<'\t'<<path.size()<<'\n';
    entry_selected();   
 }
 

@@ -18,19 +18,22 @@ class RPS
 
       bool repeat,kill_on_new;
 
+      void stop_playing();
+
    public:
       RPS(const std::string &s);
+      ~RPS() {stop_playing();}
 
-//      const PlayList &getPlayList() const {return playlist;}
+      const PlayList &getPlayList() const {return playlist;}
       PlayList &getPlayList() {return playlist;}
-      const FileList &getFileList() {return filelist;}
+      const FileList &getFileList() const {return filelist;}
+      FileList &getFileList() {return filelist;}
       
 
       void play(Soundfile &s) ;
 
       void remove_from_playlist(const int pid) ;
       void remove_from_playlist(const Soundfile &s,const bool kill_pids);
-      void stop_playing();
 
 
       void setRepeat(const bool r) {repeat=r;}
