@@ -192,6 +192,8 @@ AM_CXXFLAGS = @GTKMM_CFLAGS@ \
 
 
 rps_LDADD = @LIBS@ @GTKMM_LIBS@ 
+
+CLEANFILES = *~ *_new
 subdir = src
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
@@ -430,6 +432,7 @@ install-strip:
 mostlyclean-generic:
 
 clean-generic:
+	-test -z "$(CLEANFILES)" || rm -f $(CLEANFILES)
 
 distclean-generic:
 	-rm -f $(CONFIG_CLEAN_FILES)

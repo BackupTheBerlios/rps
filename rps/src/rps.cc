@@ -20,8 +20,8 @@ int main(int argc, char **argv)
    
    Gtk::Main m(&argc, &argv);
 
-main_window_RPS *main_window_RPS = new class main_window_RPS();
+   main_window_RPS *main_window_RPS = new class main_window_RPS();
    m.run(*main_window_RPS);
-delete main_window_RPS;
+   delete main_window_RPS;
    return 0;
 }

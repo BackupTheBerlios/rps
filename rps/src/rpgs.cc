@@ -11,6 +11,7 @@
 #include "main_window_RPS.hh"
 #include <iostream>
 
+#if 0
 void usage(const std::string &s)
 {
    std::cerr <<  s <<" must be called with a top level directory, where"
@@ -18,7 +19,7 @@ void usage(const std::string &s)
    exit(1);
 }
 
-
+#endif
 
 int main(int argc, char **argv)
 {  

@@ -192,6 +192,8 @@ AM_CXXFLAGS = -I/usr/include/gtkmm-2.0 -I/usr/lib/gtkmm-2.0/include -I/usr/inclu
 
 
 rps_LDADD =  -Wl,--export-dynamic -lgtkmm-2.0 -lgdkmm-2.0 -latkmm-1.0 -lgtk-x11-2.0 -lpangomm-1.0 -lglibmm-2.0 -lsigc-1.2 -lgdk-x11-2.0 -latk-1.0 -lgdk_pixbuf-2.0 -lm -lpangoxft-1.0 -lpangox-1.0 -lpango-1.0 -lgobject-2.0 -lgmodule-2.0 -ldl -lglib-2.0   
+
+CLEANFILES = *~ *_new
 subdir = src
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
@@ -430,6 +432,7 @@ install-strip:
 mostlyclean-generic:
 
 clean-generic:
+	-test -z "$(CLEANFILES)" || rm -f $(CLEANFILES)
 
 distclean-generic:
 	-rm -f $(CONFIG_CLEAN_FILES)
