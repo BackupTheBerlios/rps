@@ -41,15 +41,15 @@ NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
 host_triplet = i686-pc-linux-gnu
-ACLOCAL = ${SHELL} /home/thoma/rollenspiel/rps/missing --run aclocal-1.7
+ACLOCAL = ${SHELL} /tmp/rps/rps/missing --run aclocal-1.7
 ALLOCA = 
 AMDEP_FALSE = #
 AMDEP_TRUE = 
-AMTAR = ${SHELL} /home/thoma/rollenspiel/rps/missing --run tar
+AMTAR = ${SHELL} /tmp/rps/rps/missing --run tar
 AR = ar
-AUTOCONF = ${SHELL} /home/thoma/rollenspiel/rps/missing --run autoconf
-AUTOHEADER = ${SHELL} /home/thoma/rollenspiel/rps/missing --run autoheader
-AUTOMAKE = ${SHELL} /home/thoma/rollenspiel/rps/missing --run automake-1.7
+AUTOCONF = ${SHELL} /tmp/rps/rps/missing --run autoconf
+AUTOHEADER = ${SHELL} /tmp/rps/rps/missing --run autoheader
+AUTOMAKE = ${SHELL} /tmp/rps/rps/missing --run automake-1.7
 AWK = gawk
 BUILD_INCLUDED_LIBINTL = no
 CATOBJEXT = .gmo
@@ -100,7 +100,7 @@ LN_S = ln -s
 LTLIBICONV = 
 LTLIBINTL = 
 LTLIBOBJS = 
-MAKEINFO = ${SHELL} /home/thoma/rollenspiel/rps/missing --run makeinfo
+MAKEINFO = ${SHELL} /tmp/rps/rps/missing --run makeinfo
 MKINSTALLDIRS = $(top_builddir)/./mkinstalldirs
 MSGFMT = /usr/bin/msgfmt
 MSGMERGE = /usr/bin/msgmerge
@@ -152,7 +152,7 @@ host_os = linux-gnu
 host_vendor = pc
 includedir = ${prefix}/include
 infodir = ${prefix}/info
-install_sh = /home/thoma/rollenspiel/rps/install-sh
+install_sh = /tmp/rps/rps/install-sh
 libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
 localstatedir = ${prefix}/var
@@ -222,7 +222,7 @@ all: all-am
 
 .SUFFIXES:
 .SUFFIXES: .cc .lo .o .obj
-$(srcdir)/Makefile.in:  Makefile.am  $(top_srcdir)/configure.in $(ACLOCAL_M4)
+$(srcdir)/Makefile.in:  Makefile.am  $(top_srcdir)/configure.ac $(ACLOCAL_M4)
 	cd $(top_srcdir) && \
 	  $(AUTOMAKE) --gnu  src/Makefile
 Makefile:  $(srcdir)/Makefile.in  $(top_builddir)/config.status
