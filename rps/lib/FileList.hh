@@ -54,6 +54,7 @@ class FileList
       const std::string MainPath() const {return mainpath;}
       void set_default_volume(const Soundfile &s,const int dv);
       int get_default_volume(const Soundfile &s) const;
+      std::vector<Soundfile> get_cd_file_list(const std::string &cd) const;
 
 
 //      const t_filemap &Filemap()const{return filemap;}

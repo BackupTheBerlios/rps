@@ -50,7 +50,7 @@ class main_window_RPS : public main_window_RPS_glade
         void fill_playlist();
         void entry_selected() ;
         void signal_playlist_cachanged() {fill_playlist();}
-        void start_CD() const;
+        void start_CD() ;
 
         std::vector<Soundfile> cd;
    public:

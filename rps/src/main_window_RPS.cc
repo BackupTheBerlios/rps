@@ -140,18 +140,6 @@ bool main_window_RPS::on_main_window_RPS_delete_event(GdkEventAny *ev)
 
 void main_window_RPS::on_togglebutton_play_dir_toggled()
 {
-#if 0
-std::cout << "ACI\n";
-   Glib::RefPtr<Gtk::TreeSelection> sel = treeview_main->get_selection();
-   Gtk::TreeModel::iterator iter = sel->get_selected();
-   if(iter) //If anything is selected
-    {
-      Gtk::TreeModel::Row row = *iter;
-      std::string s1 = row[m_ColumnsSound.col_name];
-      std::string s2 = row[m_ColumnsSound.col_time];
-std::cout << s1 <<'\t'<<s2<<'\t'<<  '\n';
-    }
-#endif
 }
 
 
@@ -163,21 +151,17 @@ bool main_window_RPS::on_treeview_main_button_release_event(GdkEventButton *ev)
 
 void main_window_RPS::entry_selected()
 {
-//std::cout << "entry_selected \n";
    Glib::RefPtr<Gtk::TreeSelection> sel = treeview_main->get_selection();
    Gtk::TreeModel::iterator iter = sel->get_selected();
    if(iter) //If anything is selected
     {
       Gtk::TreeModel::Row row = *iter;
       Soundfile s = row[m_ColumnsSound.sound];
-      if(!s.Name().empty()) 
-        {
-         rpgs.play(s);
-        }
+      if(!s.Name().empty())   rpgs.play(s);
     }
 }
 
-void main_window_RPS::start_CD() const
+void main_window_RPS::start_CD() 
 {
    if(!togglebutton_play_dir->get_active()) return;
    Glib::RefPtr<Gtk::TreeSelection> sel = treeview_main->get_selection();
@@ -188,13 +172,12 @@ void main_window_RPS::start_CD() const
       bool is_cd = row[m_ColumnsSound.is_cd];
       if(!is_cd) return;
       std::string col = row[m_ColumnsSound.col_name];
-std::cout << "PLay "<< col<<'\n';
+      rpgs.play(col);
     }
 }
 
 void main_window_RPS::on_treeview_main_row_expanded(const Gtk::TreeModel::iterator& iter, const Gtk::TreeModel::Path& path)
 {
-   std::cout << "expanded\n";
    start_CD();
 }
 

@@ -90,13 +90,9 @@ void FileList::get_file_info()
 
 std::vector<Soundfile> FileList::get_cd_file_list(const std::string &cd) const
 {
-//   std::vector<Soundfile> cd_list;
    for(t_filemap::const_iterator i=filemap.begin();i!=filemap.end();++i)
-    {
-      if(i->first.subpath == cd) //cd_list.push_back(i->second);
+      if(i->first.subpath == cd) 
          return i->second;
-    }
-//   return cd_list;
 }
 
 
