@@ -1,6 +1,8 @@
 #include <soundfile.hh>
 #include <unistd.h>
 #include <errno.h>
+#include <itos.hh>
+
 
 #include <iostream>
 void Soundfile::play(const std::string &mainpath,const bool repeatbool)
@@ -39,8 +41,6 @@ void Soundfile::stop_playing()
    asdi=asd_sound_identifier();
 }
 
-
-
 std::string Soundfile::RepeatStr() const
 { 
    if(repeat) return "(R)"; 
@@ -52,6 +52,7 @@ std::string Soundfile::IsPlayedStr() const
    if(is_played) return "(P)";
    else return "";
 }
+
 
 #if ASDSUPPORT
 std::string itos(int i)
@@ -123,6 +124,13 @@ void SoundfileBase::set_type(const std::string &n)
          return;
        }
     }
+}
+
+void SoundfileBase::setTime(const int m, const int s) 
+{
+   minutes=m; 
+   seconds=s;
+   time = itos(m)+":"+itos(s);
 }
 
 

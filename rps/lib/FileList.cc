@@ -60,18 +60,20 @@ void FileList::get_file_info()
 
          char buf[100];
          FILE *ptr;
-         std::string time,minu,sec;
          if ((ptr = popen(cmd.c_str(), "r")) != NULL)
          while (fgets(buf, BUFSIZ, ptr) != NULL)
            {
-             time=buf;
+             std::string time=buf;
              if(time.find_last_of("=>")!=std::string::npos && 
                 time.find_last_of(":")!=std::string::npos  &&
                 time.find_last_of("\n")!=std::string::npos)
               {
-                minu=time.substr(time.find_last_of("=>")+1,time.find(":")-time.find_last_of("=>")-1);
-                sec=time.substr(time.find(":")+1,time.find("\n")-time.find(":")-1);
-                j->setTime(minu+":"+sec,atoi(minu.c_str()),atoi(sec.c_str()));
+                std::string smin=time.substr(time.find_last_of("=>")+1,time.find(":")-time.find_last_of("=>")-1);
+                std::string ssec=time.substr(time.find(":")+1,time.find("\n")-time.find(":")-1);
+                int min = atoi(smin.c_str());
+                int sec = atoi(ssec.c_str());
+
+                j->setTime(min,sec);
                }
             }
            pclose(ptr);
