@@ -18,7 +18,6 @@ class RPS
 
       bool repeat,kill_on_new;
 
-      void stop_playing();
       void save_conf() const;
       void load_conf(std::string &path) const;
 
@@ -36,6 +35,7 @@ class RPS
       void play(Soundfile &s) ;
       void play(const std::string &CD) ;
       void stop_CD() {PSL.clear();}
+      void stop_playing();
 
       void remove_from_playlist(const int pid) ;
       void remove_from_playlist(const Soundfile &s,const bool kill_pids);
