@@ -1,4 +1,4 @@
-#define ASDSUPPORT
+//#define ASDSUPPORT
 #include <string>
 #include <map>
 #include <vector>
