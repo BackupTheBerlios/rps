@@ -14,9 +14,6 @@ sound_widget::sound_widget(Soundfile &s)
 
    Gtk::Table *container = manage(new Gtk::Table());
 
-//   Gtk::Label *sound  = manage(new class Gtk::Label(s.Name()));
-//   container->attach(*sound,0,2,0,1,Gtk::SHRINK,Gtk::SHRINK);
-
    Gtk::Label *time  = manage(new class Gtk::Label(s.Time()));
    container->attach(*time,0,1,1,2,Gtk::SHRINK,Gtk::SHRINK);
 
@@ -27,10 +24,14 @@ sound_widget::sound_widget(Soundfile &s)
 
    int volume = s.get_volume();
    Gtk::Adjustment *vs_ma =
-       manage(new class Gtk::Adjustment(100-volume, 0, 100, 1, 1, 1));
-   Gtk::HScrollbar *vs_m = manage(new class Gtk::HScrollbar(*vs_ma));
+//       manage(new class Gtk::Adjustment(100-volume, 0, 100, 1, 1, 1));
+       manage(new class Gtk::Adjustment(volume, 0, 100, 1, 1, 1));
+//   Gtk::HScrollbar *vs_m = manage(new class Gtk::HScrollbar(*vs_ma));
+   Gtk::HScale *vs_m = manage(new class Gtk::HScale(*vs_ma));
     vs_ma->signal_value_changed().connect(SigC::bind(
       SigC::slot(*this,&sound_widget::value_changed),vs_ma,s));
+   vs_m->set_draw_value(true);
+   vs_m->set_digits(0);
    container->attach(*vs_m,0,2,2,3,Gtk::EXPAND|Gtk::SHRINK|Gtk::FILL,Gtk::SHRINK);
 #if 0
     vs_m->set_usize(-1, 148);
@@ -48,9 +49,11 @@ void sound_widget::button_pressed(Soundfile s)
 
 void sound_widget::value_changed(Gtk::Adjustment *a,Soundfile s)
 {
-  int wert = 100-(int)(a->get_value());
+//  int wert = 100-(int)(a->get_value());
+   int wert = (int)(a->get_value());
 std::cout << "New Value: "<<wert<<'\n';
-  if (wert<0)wert=0; // Nur zur Sicherheit
+  if (wert<0) wert=0; // Nur zur Sicherheit
+  else if (wert>100) wert=100; // Nur zur Sicherheit
   s.set_volume(wert);
 }
         
