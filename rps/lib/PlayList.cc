@@ -1,6 +1,6 @@
 #include <PlayList.hh>
 #include <iostream>
-#include <signal.h>
+#include <signal.h>  // kill
 
 
 bool PlayList::remove(const Soundfile &s, const bool kill_pids)

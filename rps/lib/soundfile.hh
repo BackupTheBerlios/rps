@@ -15,7 +15,8 @@ class SoundfileBase
       friend class Soundfile;
       enum etype{None,mp3,ogg,wav};
 
-      std::string name,stype,path,subpath/*,parentpath*/,text,time;
+      std::string name,stype,path,subpath,text,time;
+      time_t file_time;
       etype type;
       int minutes, seconds;
       int default_volume;
@@ -23,9 +24,11 @@ class SoundfileBase
       void set_type(const std::string &n);
       void set_subpath();
    public:
-      SoundfileBase() : type(None),minutes(0),seconds(0),default_volume(100) {}
-      SoundfileBase(const std::string &p,const std::string &n)
-         : path(p),name(n),type(None),minutes(0),seconds(0),default_volume(100) 
+      SoundfileBase() : file_time(0),type(None),
+                        minutes(0),seconds(0),default_volume(100) {}
+      SoundfileBase(const std::string &p,const std::string &n,const time_t t)
+         : path(p),name(n),file_time(t),
+           type(None),minutes(0),seconds(0),default_volume(100) 
             { set_subpath(); set_type(name); }
 
       void setTime(const int m, const int s) ;
@@ -34,7 +37,9 @@ class SoundfileBase
       long int Seconds() const {return minutes*60+seconds;}
       
       std::string Filename() const { return "/"+Path()+"/"+Name()+"."+TypeStr();}
+      const std::string CacheName() const {return Name()+"."+TypeStr();}
       const std::string &Name() const {return name;}
+      const time_t &FileTime() const {return file_time;}
       const std::string &Path() const {return path;}
       const std::string &SubPath() const {return subpath;}
 //      const std::string &ParentPath() const {return parentpath;}
@@ -57,8 +62,8 @@ class Soundfile : public SoundfileBase
 
    public:
       Soundfile() : is_played(false),repeat(false),mpgpid(0),asdpid(0) {}
-      Soundfile(const std::string &p,const std::string &n)
-         : SoundfileBase(p,n), is_played(false),repeat(false) {}
+      Soundfile(const std::string &p,const std::string &n,const time_t t)
+         : SoundfileBase(p,n,t), is_played(false),repeat(false) {}
 
       std::string IsPlayedStr() const;
       std::string RepeatStr() const;

@@ -5,7 +5,7 @@
 #include <sys/stat.h>
 
 FileList::FileList(const std::vector<std::string> &path)
-//: mainpath(s) 
+: mainpath(path)
 {
    FLC.load_cache();
    for(std::vector<std::string>::const_iterator i=path.begin();i!=path.end();++i)
@@ -34,8 +34,8 @@ void FileList::read_dir(const st_key &key)
       filemap[key]; // necessary to append dirs without files 
       if(sa.st_mode & S_IFREG )
        {
-         filemap[key].push_back(Soundfile(key.path,ent->d_name));
-//std::cout <<'#'<<ent->d_name <<"#  F\t"<<key.path<<'\n';
+         filemap[key].push_back(Soundfile(key.path,ent->d_name,sa.st_mtime));
+//std::cout <<'#'<<ent->d_name <<"#  F\t"<<key.path<<'\t'<<sa.st_mtime<<'\n';
        }
       if(sa.st_mode & S_IFDIR)
        {
@@ -53,30 +53,30 @@ void FileList::get_file_info()
       std::cout << i->first.path<<'\t'<<i->first.sub_level<<'\n';
       for(std::list<Soundfile>::iterator j=i->second.begin();j!=i->second.end();++j)
        {
+//         sig_file_scanned();
+//         SigFileScanned("").connect(SigC::slot(*this,sig_file_scanned));
 
          bool found_in_cache ; 
-         const std::map<std::string,FileListCache::st_cache>::const_iterator ci
-                                 = FLC.getCache().find(j->Filename());
-         if(FLC.getCache().end()==ci)
-               found_in_cache=false;
-         else  found_in_cache=true;
+         const std::map<FileListCache::st_key,FileListCache::st_cache>::const_iterator ci
+            = FLC.getCache().find(FileListCache::st_key(j->CacheName(),j->FileTime()));
+
+         if(FLC.getCache().end()==ci) found_in_cache=false;
+         else                         found_in_cache=true;
 
          if (found_in_cache)
           {
-//std::cout << ci->first<<'\n';
              j->setTime(ci->second.time);
-//std::cout << j->Filename()<<" cached time ="<<ci->second.time<<' '<<j->Time()<<'\n';
              if(ci->second.time.empty()) found_in_cache=false;
              else j->setTime(ci->second.time);
              j->setDefaultVolume(ci->second.default_volume);
           }
-         else
+         if(j->Seconds() == 0)
           {
             std::vector<std::pair<std::string,std::string> > com;
             com.push_back(std::pair<std::string,std::string>
-               ("qmp3info -s "+j->Filename(),"=>"));
-            com.push_back(std::pair<std::string,std::string>
                ("checkmp3 "+j->Filename(),"SONG_LENGTH"));
+            com.push_back(std::pair<std::string,std::string>
+               ("qmp3info -s "+j->Filename(),"=>"));
             for(std::vector<std::pair<std::string,std::string> >::
                const_iterator i=com.begin();i!=com.end();++i)
              {
@@ -88,9 +88,6 @@ void FileList::get_file_info()
                    std::string time=buf;
                    if(time.find(i->second)!=std::string::npos)
                     {
-#if 0
-std::cout << j->Name()<<"\t@"<<time<<"@\n";
-#endif
                       j->setTime(time.substr(time.find(i->second)
                                     +i->second.size(),std::string::npos));
                       if(j->Time()!="0:00") goto loop_break;
@@ -102,8 +99,8 @@ std::cout << j->Name()<<"\t@"<<time<<"@\n";
 loop_break:
 ;
 #if 1
-         std::cout << "  "<<j->Filename()<<' '<<j->Time()<<' '
-                   <<j->DefaultVolume()<<'\n';
+    std::cout << " "<< found_in_cache<<"  "<<j->CacheName()<<' '
+                    <<j->Time()<<' '<<j->DefaultVolume()<<'\n';
 #endif
        }
     }
@@ -130,7 +127,8 @@ void FileList::save_cache() const
     {
       for(std::list<Soundfile>::const_iterator j=i->second.begin();j!=i->second.end();++j)
        {
-         fo << "Name:(("  <<j->Filename()<<"))\t"
+         fo << "Name:(("  <<j->CacheName()<<"))\t"
+            << "FileTime:(("<<j->FileTime()<<"))\t"
             << "Length:(("<<j->Time()<<"))\t"
             << "Volume:(("<<j->DefaultVolume()<<"))\n";
        }   
@@ -164,6 +162,7 @@ void FileListCache::load_cache()
 
    std::vector<std::string> FC;
    FC.push_back("Name:((");
+   FC.push_back("FileTime:((");
    FC.push_back("Length:((");
    FC.push_back("Volume:((");
    std::string E = "))";
@@ -188,8 +187,8 @@ void FileListCache::load_cache()
 //std::cout << _e<<"#"<<line<<"#\t#"<<result<<"#\n";
          VR.push_back(result);
       }
-//std::cout << VR[0]<<'\t'<<VR[1]<<'\t'<<VR[2]<<'\n';
-     CM[VR[0]] = st_cache(VR[1],atoi(VR[2].c_str()));
+//std::cout << VR[0]<<'\t'<<atol(VR[1].c_str())<<'\t'<<VR[2]<<'\t'<<VR[3]<<'\n';
+     CM[FileListCache::st_key(VR[0],atol(VR[1].c_str()))] = st_cache(VR[2],atoi(VR[3].c_str()));
     }
 }
 

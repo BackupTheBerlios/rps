@@ -131,8 +131,8 @@ void RPS::save_conf() const
 {
    std::string sname=getenv("HOME")+std::string("/.rps.rc");
    std::ofstream fo(sname.c_str());
-   std::cout << "Saving "<<sname<<'\n';
    const std::vector<std::string> &mp=filelist.MainPath();
+   std::cout << "Saving "<<sname<<'\t'<<mp.size()<<'\n';
    for(std::vector<std::string>::const_iterator i=mp.begin();i!=mp.end();++i)
       fo << "Path="<<*i<<'\n';
 }

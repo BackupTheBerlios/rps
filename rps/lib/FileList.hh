@@ -4,27 +4,38 @@
 #include <list>
 #include <vector>
 #include <assert.h>
+#include <sigc++/signal.h>
+
 
 class FileListCache
 {
    public:
+      struct st_key{std::string name; time_t file_time;
+             st_key(const std::string &n,const  time_t t)
+               : name(n),file_time(t) {}
+             bool operator<(const st_key &b) const
+               { return name<b.name || name==b.name && file_time<b.file_time;}
+             bool operator==(const st_key &b) const
+               { return name==b.name && file_time<b.file_time;}
+             };
       struct st_cache{ std::string time; int default_volume; 
              st_cache() :default_volume(0) {}
              st_cache(const std::string &t, const int d)
                   : time(t),default_volume(d) {}
              };
    private:
-      std::map<std::string,st_cache> CM;
+      std::map<st_key,st_cache> CM;
 
    public:
       void load_cache();
 
-      const std::map<std::string,st_cache> &getCache() const {return CM;}   
+      const std::map<st_key,st_cache> &getCache() const {return CM;}   
 };
 
 
 class FileList
 {
+//      SigC::Signal0<void> sig_playlist_changed;
    private:
       struct st_key{std::string path; std::string subpath; 
                     std::string parentpath; int sub_level;
@@ -51,10 +62,17 @@ class FileList
       void read_dir(const st_key &key);
       void get_file_info();
       FileListCache FLC;
+
+ 
+//      SigC::Signal0<void> sig_file_scanned;
+//      SigC::Signal0<std::string> sig_file_scanned;
    public:
       FileList() {}
       FileList(const std::vector<std::string> &path);
       ~FileList() { save_cache(); }
+
+//      SigC::Signal0<std::string> &SigFileScanned() {return sig_file_scanned;}
+//      const std::string &ScannedFile(const std::string &s){return s;}
 
       void save_cache() const;
       const std::vector<std::string> MainPath() const {return mainpath;}
