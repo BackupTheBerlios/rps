@@ -13,7 +13,7 @@ LIBS = -L../lib/ -lRPGS \
 bin_PROGRAMS = rps
 
 rps_SOURCES = \
-	rpgs.cc\
+	rps.cc\
 	main_window_RPS_glade.cc \
 	main_window_RPS.cc \
    sound_widget.cc
@@ -29,3 +29,6 @@ AM_CXXFLAGS = @GTKMM_CFLAGS@ \
               -I${ASD_DIR}common/
 
 rps_LDADD = @LIBS@ @GTKMM_LIBS@ 
+
+CLEANFILES= *~ *_new
+

@@ -1,7 +1,7 @@
 #include <sound_widget.hh>
 #include <gtkmm/label.h>
 #include <gtkmm/button.h>
-#include <gtkmm/scrollbar.h>
+#include <gtkmm/scale.h>
 #include <gtkmm/adjustment.h>
 #include <gtkmm/table.h>
 #include <main_window_RPS.hh>

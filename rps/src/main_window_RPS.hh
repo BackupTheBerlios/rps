@@ -18,7 +18,6 @@
 #include <gtkmm/treestore.h>
 #include <signal.h>
 #include <rps.hh>
-#include <VolumeScale.hh>
 
 class main_window_RPS : public main_window_RPS_glade
 {  

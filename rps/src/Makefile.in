@@ -173,7 +173,7 @@ ASD_DIR = /usr/src/asd4-0.2/
 bin_PROGRAMS = rps
 
 rps_SOURCES = \
-	rpgs.cc\
+	rps.cc\
 	main_window_RPS_glade.cc \
 	main_window_RPS.cc \
    sound_widget.cc
@@ -202,7 +202,7 @@ CONFIG_CLEAN_FILES =
 bin_PROGRAMS = rps$(EXEEXT)
 PROGRAMS = $(bin_PROGRAMS)
 
-am_rps_OBJECTS = rpgs.$(OBJEXT) main_window_RPS_glade.$(OBJEXT) \
+am_rps_OBJECTS = rps.$(OBJEXT) main_window_RPS_glade.$(OBJEXT) \
 	main_window_RPS.$(OBJEXT) sound_widget.$(OBJEXT)
 rps_OBJECTS = $(am_rps_OBJECTS)
 rps_DEPENDENCIES =
@@ -213,7 +213,7 @@ depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
 @AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/main_window_RPS.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/main_window_RPS_glade.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/rpgs.Po ./$(DEPDIR)/sound_widget.Po
+@AMDEP_TRUE@	./$(DEPDIR)/rps.Po ./$(DEPDIR)/sound_widget.Po
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 LTCXXCOMPILE = $(LIBTOOL) --mode=compile $(CXX) $(DEFS) \
@@ -278,7 +278,7 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main_window_RPS.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main_window_RPS_glade.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rpgs.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rps.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sound_widget.Po@am__quote@
 
 .cc.o:

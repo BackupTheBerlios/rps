@@ -7,7 +7,7 @@
 #endif
 
 
-RPS::RPS(const std::string &s) 
+RPS::RPS(const std::string &newpath) 
 : repeat(false),kill_on_new(false)
 {
 #if ASDSUPPORT
@@ -18,7 +18,17 @@ RPS::RPS(const std::string &s)
       exit (1);
     }
 #endif
-   filelist=FileList(s);
+
+   std::string path;
+   load_conf(path);
+   if(path.empty() && newpath.empty()) 
+     { std::cerr << " Unknown pathes: \n\t"<<path<<"\n\t"<<newpath
+                 <<"\n , please use the -d<path> option\n";
+       exit(1);
+     }
+
+   if(!newpath.empty()) path=newpath;
+   filelist=FileList(path);
 }
 
 #if ASDSUPPORT
@@ -113,4 +123,31 @@ reloop:
       remove_from_playlist(*i,true);
       goto reloop;
    }  
+}
+
+
+void RPS::save_conf() const
+{
+   std::string sname=getenv("HOME")+std::string("/.rps.rc");
+   std::ofstream fo(sname.c_str());
+   std::cout << "Saving "<<sname<<'\n';
+   fo << "Path="<<filelist.MainPath()<<'\n';
+}
+
+void RPS::load_conf(std::string &path) const
+{
+   std::string sname=getenv("HOME")+std::string("/.rps.rc");
+   std::ifstream fi(sname.c_str());
+   if(!fi.good()) { std::cout << sname <<" not found\n";
+                    return; }
+   std::cout << "Loading "<<sname<<'\n';
+   while(true)
+     {
+       std::string line;
+       std::getline(fi,line);
+       if(!fi.good()) break; 
+       std::string::size_type _a = line.find_last_of("Path=");
+       if(_a!=std::string::npos) 
+         path=line.substr(_a,std::string::npos);
+     }                            
 }

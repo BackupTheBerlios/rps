@@ -20,7 +20,10 @@ int main(int argc, char **argv)
    
    Gtk::Main m(&argc, &argv);
 
-   main_window_RPS *main_window_RPS = new class main_window_RPS();
+   std::string path;
+   if(argc==2) path = argv[1];
+
+   main_window_RPS *main_window_RPS = new class main_window_RPS(path);
    m.run(*main_window_RPS);
    delete main_window_RPS;
    return 0;
