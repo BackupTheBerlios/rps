@@ -3,24 +3,48 @@
 #include <gtkmm/button.h>
 #include <gtkmm/scrollbar.h>
 #include <gtkmm/adjustment.h>
-#include <gtkmm/frame.h>
+#include <gtkmm/box.h>
 
 #include <iostream>
 
 sound_widget::sound_widget(Soundfile &s)
 {
+   set_label(s.Name());
+
+   Gtk::VBox *vbox = manage(new class Gtk::VBox());
+
    Gtk::Label *sound  = manage(new class Gtk::Label(s.Name()));
+   vbox->pack_start(*sound);
+
    Gtk::Label *time  = manage(new class Gtk::Label(s.Time()));
+   vbox->pack_start(*time);
+
    Gtk::Button *stop  = manage(new class Gtk::Button("Stop"));
+   stop->signal_clicked().connect(SigC::slot(*this, &sound_widget::button_pressed_));
+#if 0
+   stop->signal_clicked().connect(SigC::bind(SigC::slot(
+         this, &sound_widget::button_pressed),s));
+#endif
+#if 0
+   stop->signal_clicked().connect(SigC::bind(SigC::slot(
+     *static_cast<class sound_widget*>(this), 
+     &sound_widget::button_pressed),s));
+#endif
+   vbox->pack_start(*stop);
 
    int volume = s.get_volume();
    Gtk::Adjustment *vs_ma =
        manage(new class Gtk::Adjustment(100-volume, 0, 100, 1, 1, 1));
    Gtk::VScrollbar *vs_m = manage(new class Gtk::VScrollbar(*vs_ma));
-
-
-   Gtk::Frame *f_m = manage(new class Gtk::Frame(s.Name()));
 #if 0
+    vs_ma->value_changed.connect(SigC::bind(
+      SigC::slot(this,&sound_widget::value_changed),vs_ma,s));
+#endif
+   vbox->pack_start(*vs_m);
+
+
+#if 0
+//   Gtk::Frame *f_m = manage(new class Gtk::Frame(s.Name()));
     f_m->set_label_align(0, 0);
     f_m->set_shadow_type(GTK_SHADOW_ETCHED_IN);
     f_m->add(*vs_m);
@@ -36,26 +60,7 @@ sound_widget::sound_widget(Soundfile &s)
     f_m->show();
 #endif
 
-   stop->signal_clicked().connect(SigC::slot(*this, &sound_widget::button_pressed_));
-#if 0
-   stop->signal_clicked().connect(SigC::bind(SigC::slot(
-         this, &sound_widget::button_pressed),s));
-#endif
-#if 0
-   stop->signal_clicked().connect(SigC::bind(SigC::slot(
-     *static_cast<class sound_widget*>(this), 
-     &sound_widget::button_pressed),s));
-#endif
-
-#if 0
-    vs_ma->value_changed.connect(SigC::bind(
-      SigC::slot(this,&sound_widget::value_changed),vs_ma,s));
-#endif
-    
-   pack_start(*sound);
-   pack_start(*time);
-   pack_start(*vs_m);
-   pack_start(*stop);
+   add(*vbox);
    show_all();
 //    table->attach(*f_m,*count,*count+1,1,2);
 }

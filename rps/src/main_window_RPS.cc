@@ -10,9 +10,11 @@
 
 #include <iostream>
 #include <gtkmm/main.h>
+#include <gtkmm/box.h>
 #include <gtkmm/treemodel.h>
 #include <sys/wait.h>
 #include <gdk/gdkkeysyms.h> 
+#include <sound_widget.hh>
 
 main_window_RPS *main_window_RPS::self;
 
@@ -117,6 +119,17 @@ void main_window_RPS::fill_playlist()
   treeview_playlist->append_column("Sound", m_ColumnsSound.col2);
   treeview_playlist->append_column("Id", m_ColumnsSound.colI1);
 //  treeview_playlist->append_column("Scale", m_ColumnsSound.scale);
+
+
+  scrolledwindow_playlist->remove();
+  Gtk::HBox *hbox = manage(new class Gtk::HBox());
+  for(PlayList::iterator i=rpgs.getPlayList().begin();i!=rpgs.getPlayList().end();++i)
+   {
+      sound_widget sw(*i);
+      hbox->pack_start(sw);
+   }
+  scrolledwindow_playlist->add(*hbox);
+  hbox->show_all();
 }                    
 
 void main_window_RPS::on_button_quit_clicked() 
