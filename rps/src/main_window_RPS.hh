@@ -18,12 +18,12 @@
 #include <gtkmm/treestore.h>
 #include <signal.h>
 #include <rps.hh>
+#include <VolumeScale.hh>
 
 class main_window_RPS : public main_window_RPS_glade
 {  
         
    private:
-//        bool block_fill_playlist;
         RPS rpgs;
 
         static void signalhandler(int signr);
@@ -36,9 +36,13 @@ class main_window_RPS : public main_window_RPS_glade
 
            Gtk::TreeModelColumn<std::string> col1;
            Gtk::TreeModelColumn<std::string> col2;
+           Gtk::TreeModelColumn<std::string> col_time;
+           Gtk::TreeModelColumn<int>         colI1;
            Gtk::TreeModelColumn<Soundfile> sound;
+//           Gtk::TreeModelColumn<Gtk::HScale*> scale;
 
-           ModelColumnsSound() { add(col1); add(col2); add(sound); }
+           ModelColumnsSound() { add(col1); add(col2); add(col_time); add(colI1); add(sound); }
+//           ModelColumnsSound() { add(col1); add(col2); add(colI1); add(sound); add(scale); }
 
           };
         ModelColumnsSound m_ColumnsSound;

@@ -12,7 +12,7 @@ class SoundfileBase
       friend class Soundfile;
       enum etype{None,mp3,ogg,wav};
 
-      std::string name,stype,path,text;
+      std::string name,stype,path,text,time;
       etype type;
       int minutes, seconds;
 
@@ -23,7 +23,10 @@ class SoundfileBase
          : path(p),name(n),type(None),minutes(0),seconds(0) 
             { set_type(name); }
 
-      void setTime(const int m, const int s) {minutes=m; seconds=s;}
+      void setTime(const std::string t,const int m, const int s) 
+            {time=t; minutes=m; seconds=s;}
+      const std::string &Time() const {return time;}
+      
       const std::string &Name() const {return name;}
       const std::string &Path() const {return path;}
       etype Type() const {return type;}
@@ -33,6 +36,8 @@ class SoundfileBase
             {return Name()==b.Name() && Type()==b.Type() &&
                     Path()==b.Path();}
 
+      bool operator<(const SoundfileBase &b) const
+            {return Name()<b.Name() ;}            
 };
 
 class Soundfile : public SoundfileBase

@@ -10,6 +10,8 @@ FileList::FileList(const std::string &s)
    looking_for_subpaths();
    read_subdirs();
    get_file_info();
+   for(t_filemap::iterator i=filemap.begin();i!=filemap.end();++i)
+      std::sort(i->second.begin(),i->second.end());
 }
 
 
@@ -49,16 +51,16 @@ void FileList::read_subdirs()
 
 void FileList::get_file_info() 
 {
-   for(t_filemap::const_iterator i=filemap.begin();i!=filemap.end();++i)
+   for(t_filemap::iterator i=filemap.begin();i!=filemap.end();++i)
     {
       std::cout << i->first<<'\n';
-      for(std::vector<Soundfile>::const_iterator j=i->second.begin();j!=i->second.end();++j)
+      for(std::vector<Soundfile>::iterator j=i->second.begin();j!=i->second.end();++j)
        {
          std::string cmd="qmp3info -s "+mainpath+"/"+j->Path()+"/"+j->Name()+"."+j->TypeStr();
 
 //         system(cmd.c_str());
 
-           char buf[BUFSIZ];
+           char buf[100];
            FILE *ptr;
            std::string time,minu,sec;
            if ((ptr = popen(cmd.c_str(), "r")) != NULL)
@@ -69,16 +71,16 @@ void FileList::get_file_info()
                  time.find_last_of(":")!=std::string::npos  &&
                  time.find_last_of("\n")!=std::string::npos)
                {
-                 minu=time.substr(time.find_last_of("=>")+1,time.find(":")-1);
-                 sec=time.substr(time.find(":")+1,time.find("\n")-2);
-                 j->setTime(atoi(minu.c_str()),atoi(sec.c_str()));
+                 minu=time.substr(time.find_last_of("=>")+1,time.find(":")-time.find_last_of("=>")-1);
+                 sec=time.substr(time.find(":")+1,time.find("\n")-time.find(":")-1);
+                 j->setTime(minu+":"+sec,atoi(minu.c_str()),atoi(sec.c_str()));
+//std::cout <<time<<"#"<< minu<<":"<<sec<<"#\n";
+//exit(1);
                }
-//std::cout<< "##"<<time <<"##\n";
             }
            pclose(ptr);
-         std::cout << "   "<<j->Path()<<'\t'<<j->Name()<<' '<<j->TypeStr()
-                   <<"\tTime:"<<"=>"<<atoi(minu.c_str())<<"<=>"<<atoi(sec.c_str())<<"<=\n";         
-//exit (1);
+           std::cout << "   "<<j->Path()<<'\t'<<j->Name()<<' '<<j->TypeStr()
+                   <<' '<<j->Time()<<'\n';
        }
     }
 }

@@ -2,7 +2,7 @@
 # using glademm V2.0.0b
 #
 # newer (non customized) versions of this file go to Makefile.am_new
-#ASD_DIR=/usr/src/asd4-0.2/
+ASD_DIR=/usr/src/asd4-0.2/
 
 LIBS = -L../lib/ -lRPGS \
        ${ASD_DIR}asdlib/ASDLIB.o \

@@ -32,7 +32,7 @@ int main(int argc, char **argv)
    if(argc!=2) usage(argv[0]);
    const std::string top_level_dir=argv[1];
 #else
-   const std::string top_level_dir="/var/thoma/sound/testsound";
+   const std::string top_level_dir="/var/thoma/sound/RoleSound";
 #endif
    Gtk::Main m(&argc, &argv);
 

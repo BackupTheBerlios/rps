@@ -74,13 +74,15 @@ void main_window_RPS::fill_columns()
      for(std::vector<Soundfile>::const_iterator j=i->second.begin();j!=i->second.end();++j)
       {
         Gtk::TreeModel::Row childrow = *(m_refTreeModelSelect->append(row.children()));
-        childrow[m_ColumnsSound.col1] = i->first;
+//        childrow[m_ColumnsSound.col1] = i->first;
         childrow[m_ColumnsSound.col2] = j->Name();
+        childrow[m_ColumnsSound.col_time] = j->Time();
         childrow[m_ColumnsSound.sound] = *j;
       }
    }  
   //Add the TreeView's view columns:
   treeview_main->append_column("Path", m_ColumnsSound.col1);
+  treeview_main->append_column("Time", m_ColumnsSound.col_time);
   treeview_main->append_column("Soundfile", m_ColumnsSound.col2);
   treeview_main->queue_resize();
   treeview_main->set_enable_search(true);
@@ -98,12 +100,23 @@ void main_window_RPS::fill_playlist()
    {
      Gtk::TreeModel::Row row = *(m_refTreeModelPlayList->append());
      row[m_ColumnsSound.col1] = i->RepeatStr();
+     row[m_ColumnsSound.col_time] = i->Time();
      row[m_ColumnsSound.col2] = i->Name();
+     row[m_ColumnsSound.colI1] = i->getASDI().getID();
      row[m_ColumnsSound.sound] = *i;
+#if 0
+     Gtk::Adjustment *vs_ma = manage(new class Gtk::Adjustment
+                              (100-i->get_volume(), 0, 100, 1, 1, 1));
+     Gtk::HScale *vs_sc = manage(new class Gtk::HScale(*vs_ma));                                             
+     row[m_ColumnsSound.scale] = vs_sc;
+#endif
    }  
   //Add the TreeView's view columns:
   treeview_playlist->append_column("Rep.", m_ColumnsSound.col1);
+  treeview_playlist->append_column("Time", m_ColumnsSound.col_time);
   treeview_playlist->append_column("Sound", m_ColumnsSound.col2);
+  treeview_playlist->append_column("Id", m_ColumnsSound.colI1);
+//  treeview_playlist->append_column("Scale", m_ColumnsSound.scale);
 }                    
 
 void main_window_RPS::on_button_quit_clicked() 

@@ -14,12 +14,6 @@
 
 
 
-# generated 2003/9/22 11:37:15 CEST by thoma@Tiger.(none)
-# using glademm V2.0.0b
-#
-# newer (non customized) versions of this file go to Makefile.am_new
-#ASD_DIR=/usr/src/asd4-0.2/
-
 srcdir = .
 top_srcdir = ..
 
@@ -169,6 +163,12 @@ sbindir = ${exec_prefix}/sbin
 sharedstatedir = ${prefix}/com
 sysconfdir = ${prefix}/etc
 target_alias = 
+
+# generated 2003/9/22 11:37:15 CEST by thoma@Tiger.(none)
+# using glademm V2.0.0b
+#
+# newer (non customized) versions of this file go to Makefile.am_new
+ASD_DIR = /usr/src/asd4-0.2/
 
 bin_PROGRAMS = rps
 
