@@ -26,7 +26,6 @@ RPS::RPS(const std::string &newpath)
                  <<"\n , please use the -d<path> option\n";
        exit(1);
      }
-std::cout << "PPPPP: "<<path<<'\t'<<newpath<<'\n';
    if(!newpath.empty()) path=newpath;
    filelist=FileList(path);
 }

@@ -30,6 +30,7 @@ void FileList::read_dir(const st_key &key)
 
       struct stat sa;
       stat((key.path+"/"+ent->d_name).c_str(),&sa);
+      filemap[key]; // necessary to append dirs without files 
       if(sa.st_mode & S_IFREG )
        {
          filemap[key].push_back(Soundfile(key.path,ent->d_name));
@@ -81,7 +82,7 @@ void FileList::get_file_info()
                }
             pclose(ptr);
           }
-         std::cout << "   "<<j->Filename()<<' '<<j->Time()<<' '
+         std::cout << "  "<<j->Filename()<<' '<<j->Time()<<' '
                    <<j->DefaultVolume()<<'\n';
        }
     }

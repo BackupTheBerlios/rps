@@ -15,7 +15,7 @@ class SoundfileBase
       friend class Soundfile;
       enum etype{None,mp3,ogg,wav};
 
-      std::string name,stype,path,subpath,text,time;
+      std::string name,stype,path,subpath/*,parentpath*/,text,time;
       etype type;
       int minutes, seconds;
       int default_volume;
@@ -37,6 +37,7 @@ class SoundfileBase
       const std::string &Name() const {return name;}
       const std::string &Path() const {return path;}
       const std::string &SubPath() const {return subpath;}
+//      const std::string &ParentPath() const {return parentpath;}
       etype Type() const {return type;}
       std::string TypeStr() const;
       int DefaultVolume() const {return default_volume;}
@@ -55,11 +56,9 @@ class Soundfile : public SoundfileBase
       int mpgpid, asdpid;
 
    public:
-      Soundfile() : is_played(false),repeat(false),mpgpid(0),asdpid(0)/*,
-                    start_time(0)*/ {}
+      Soundfile() : is_played(false),repeat(false),mpgpid(0),asdpid(0) {}
       Soundfile(const std::string &p,const std::string &n)
-         : SoundfileBase(p,n), is_played(false),repeat(false)/*,
-            start_time(0)*/ {}
+         : SoundfileBase(p,n), is_played(false),repeat(false) {}
 
       std::string IsPlayedStr() const;
       std::string RepeatStr() const;

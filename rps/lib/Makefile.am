@@ -21,7 +21,8 @@ LIBS = `glib-config --libs glib gthread` \
        ${ASD_DIR}common/COMMON.o \
        -L. -lRPGS
 
-bin_PROGRAMS = rpgs_test
+#bin_PROGRAMS = rpgs_test
+noinst_PROGRAMS = rpgs_test
 
 #AM_CXXFLAGS = @GTKMM_CFLAGS@
 rpgs_test_LDADD = @LIBS@ @SIGC_LIBS@ 

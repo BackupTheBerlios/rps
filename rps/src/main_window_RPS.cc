@@ -61,6 +61,37 @@ std::cout << "event\t"<<ev->keyval<<'\n';
 }
 #endif
 
+
+void main_window_RPS::fill_columns_recursive(const int level,
+                                             Gtk::TreeModel::Row *prow,
+                                             const std::string parentpath)
+{
+  Gtk::TreeModel::Row row;
+  for(FileList::const_iterator i=rpgs.getFileList().begin();i!=rpgs.getFileList().end();++i)
+   {
+     if(i->first.sub_level == level) 
+      {
+        if( !parentpath.empty() && parentpath!=i->first.subpath ) continue;
+
+        if(prow==NULL) row = *(m_refTreeModelSelect->append()); 
+        else row = *(m_refTreeModelSelect->append(prow->children()));
+
+        row[m_ColumnsSound.col_name] = i->first.subpath;
+
+        if(i->first.path.find("/CDs/") == std::string::npos)
+             row[m_ColumnsSound.is_cd] = false;
+        else row[m_ColumnsSound.is_cd] = true;
+
+        fill_soundfiles(i->second,row);
+      }
+     else if(i->first.sub_level == level+1)
+      {
+       fill_columns_recursive(level+1,&row,i->first.subpath);       
+      }
+   }
+}
+
+
 void main_window_RPS::fill_columns()
 {
   //Create the Tree model: 
@@ -69,28 +100,13 @@ void main_window_RPS::fill_columns()
   treeview_main->set_model(m_refTreeModelSelect);
   treeview_main->columns_autosize();
 
-  //Fill the TreeView's model
-  Gtk::TreeModel::Row cd_row = *(m_refTreeModelSelect->append()); 
-  cd_row[m_ColumnsSound.col_name] = "CDs";
-  for(FileList::const_iterator i=rpgs.getFileList().begin();i!=rpgs.getFileList().end();++i)
-   {
-     if(i->first.path.find("/CDs/") == std::string::npos )
-      {
-        Gtk::TreeModel::Row row = *(m_refTreeModelSelect->append());
-        row[m_ColumnsSound.col_name] = i->first.subpath;
-        row[m_ColumnsSound.is_cd] = false;
-        fill_soundfiles(i->second,row);
-      }
-     else 
-      {
-        Gtk::TreeModel::Row row = *(m_refTreeModelSelect->append(cd_row.children()));
-        row[m_ColumnsSound.col_name] = i->first.subpath;
-        row[m_ColumnsSound.is_cd] = true;
-        fill_soundfiles(i->second,row);
-      }
-   }  
+  fill_columns_recursive(1);
+
   //Add the TreeView's view columns:
   treeview_main->append_column("Sound", m_ColumnsSound.col_name);
+#if 0
+  treeview_main->set_spacing(0);
+#endif
   treeview_main->append_column("Time", m_ColumnsSound.col_time);
   treeview_main->queue_resize();
   treeview_main->set_enable_search(true);

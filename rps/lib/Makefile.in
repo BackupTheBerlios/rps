@@ -183,7 +183,8 @@ libRPGS_a_SOURCES = soundfile.cc \
                     itos.cc
 
 
-bin_PROGRAMS = rpgs_test
+#bin_PROGRAMS = rpgs_test
+noinst_PROGRAMS = rpgs_test
 
 #AM_CXXFLAGS = @GTKMM_CFLAGS@
 rpgs_test_LDADD = @LIBS@ @SIGC_LIBS@ 
@@ -207,8 +208,8 @@ am_libRPGS_a_OBJECTS = soundfile.$(OBJEXT) FileList.$(OBJEXT) \
 	PlayList.$(OBJEXT) rps.$(OBJEXT) asd_sound.$(OBJEXT) \
 	itos.$(OBJEXT)
 libRPGS_a_OBJECTS = $(am_libRPGS_a_OBJECTS)
-bin_PROGRAMS = rpgs_test$(EXEEXT)
-PROGRAMS = $(bin_PROGRAMS)
+noinst_PROGRAMS = rpgs_test$(EXEEXT)
+PROGRAMS = $(noinst_PROGRAMS)
 
 am_rpgs_test_OBJECTS = rpgs_test.$(OBJEXT)
 rpgs_test_OBJECTS = $(am_rpgs_test_OBJECTS)
@@ -277,31 +278,9 @@ libRPGS.a: $(libRPGS_a_OBJECTS) $(libRPGS_a_DEPENDENCIES)
 	-rm -f libRPGS.a
 	$(libRPGS_a_AR) libRPGS.a $(libRPGS_a_OBJECTS) $(libRPGS_a_LIBADD)
 	$(RANLIB) libRPGS.a
-binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
-install-binPROGRAMS: $(bin_PROGRAMS)
-	@$(NORMAL_INSTALL)
-	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	@list='$(bin_PROGRAMS)'; for p in $$list; do \
-	  p1=`echo $$p|sed 's/$(EXEEXT)$$//'`; \
-	  if test -f $$p \
-	     || test -f $$p1 \
-	  ; then \
-	    f=`echo "$$p1" | sed 's,^.*/,,;$(transform);s/$$/$(EXEEXT)/'`; \
-	   echo " $(INSTALL_PROGRAM_ENV) $(LIBTOOL) --mode=install $(binPROGRAMS_INSTALL) $$p $(DESTDIR)$(bindir)/$$f"; \
-	   $(INSTALL_PROGRAM_ENV) $(LIBTOOL) --mode=install $(binPROGRAMS_INSTALL) $$p $(DESTDIR)$(bindir)/$$f || exit 1; \
-	  else :; fi; \
-	done
 
-uninstall-binPROGRAMS:
-	@$(NORMAL_UNINSTALL)
-	@list='$(bin_PROGRAMS)'; for p in $$list; do \
-	  f=`echo "$$p" | sed 's,^.*/,,;s/$(EXEEXT)$$//;$(transform);s/$$/$(EXEEXT)/'`; \
-	  echo " rm -f $(DESTDIR)$(bindir)/$$f"; \
-	  rm -f $(DESTDIR)$(bindir)/$$f; \
-	done
-
-clean-binPROGRAMS:
-	@list='$(bin_PROGRAMS)'; for p in $$list; do \
+clean-noinstPROGRAMS:
+	@list='$(noinst_PROGRAMS)'; for p in $$list; do \
 	  f=`echo $$p|sed 's/$(EXEEXT)$$//'`; \
 	  echo " rm -f $$p $$f"; \
 	  rm -f $$p $$f ; \
@@ -457,7 +436,7 @@ check: check-am
 all-am: Makefile $(LIBRARIES) $(PROGRAMS)
 
 installdirs:
-	$(mkinstalldirs) $(DESTDIR)$(libdir) $(DESTDIR)$(bindir)
+	$(mkinstalldirs) $(DESTDIR)$(libdir)
 install: install-am
 install-exec: install-exec-am
 install-data: install-data-am
@@ -485,8 +464,8 @@ maintainer-clean-generic:
 	@echo "it deletes files that may require special tools to rebuild."
 clean: clean-am
 
-clean-am: clean-binPROGRAMS clean-generic clean-libLIBRARIES \
-	clean-libtool mostlyclean-am
+clean-am: clean-generic clean-libLIBRARIES clean-libtool \
+	clean-noinstPROGRAMS mostlyclean-am
 
 distclean: distclean-am
 	-rm -rf ./$(DEPDIR)
@@ -505,7 +484,7 @@ info-am:
 
 install-data-am:
 
-install-exec-am: install-binPROGRAMS install-libLIBRARIES
+install-exec-am: install-libLIBRARIES
 
 install-info: install-info-am
 
@@ -532,21 +511,20 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-binPROGRAMS uninstall-info-am \
-	uninstall-libLIBRARIES
+uninstall-am: uninstall-info-am uninstall-libLIBRARIES
 
-.PHONY: CTAGS GTAGS all all-am check check-am clean clean-binPROGRAMS \
-	clean-generic clean-libLIBRARIES clean-libtool ctags distclean \
-	distclean-compile distclean-generic distclean-libtool \
+.PHONY: CTAGS GTAGS all all-am check check-am clean clean-generic \
+	clean-libLIBRARIES clean-libtool clean-noinstPROGRAMS ctags \
+	distclean distclean-compile distclean-generic distclean-libtool \
 	distclean-tags distdir dvi dvi-am info info-am install \
-	install-am install-binPROGRAMS install-data install-data-am \
-	install-exec install-exec-am install-info install-info-am \
+	install-am install-data install-data-am install-exec \
+	install-exec-am install-info install-info-am \
 	install-libLIBRARIES install-man install-strip installcheck \
 	installcheck-am installdirs maintainer-clean \
 	maintainer-clean-generic mostlyclean mostlyclean-compile \
 	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
-	tags uninstall uninstall-am uninstall-binPROGRAMS \
-	uninstall-info-am uninstall-libLIBRARIES
+	tags uninstall uninstall-am uninstall-info-am \
+	uninstall-libLIBRARIES
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

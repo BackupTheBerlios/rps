@@ -111,6 +111,15 @@ void SoundfileBase::set_subpath()
    else
      {
        subpath=path.substr(st+1,std::string::npos);
+#if 0
+       std::string sp = path.substr(0,st);
+       st = sp.find_last_of("/");
+       if(st == std::string::npos)
+          std::cerr << "Strange error while lookling for subpath in "<<path<<'\n';
+       else
+          parentpath = sp.substr(st+1,std::string::npos);
+//std::cout << Name()<<'\t'<<subpath<<' '<<parentpath <<' '<<<<'\n';
+#endif
      }
 }
 

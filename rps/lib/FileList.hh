@@ -25,22 +25,27 @@ class FileListCache
 class FileList
 {
    private:
-      struct st_key{std::string path; std::string subpath; int sub_level;
+      struct st_key{std::string path; std::string subpath; 
+                    std::string parentpath; int sub_level;
              st_key(const std::string &p,int s) : path(p), sub_level(s) 
                {
                  std::string::size_type st = path.find_last_of("/");
                  if(st == std::string::npos) assert("impossible path\n");
                  subpath=path.substr(st+1,std::string::npos);           
+                 std::string sp = path.substr(0,st);
+                 st = sp.find_last_of("/"); 
+                 if(st == std::string::npos) assert("impossible parpath\n");
+                 parentpath = sp.substr(st+1,std::string::npos);                        
                }
              bool operator<(const st_key &b) const 
-               {return sub_level<b.sub_level || 
-                       sub_level==b.sub_level && path<b.path;}
+               {return path<b.path || path==b.path && sub_level<b.sub_level;}
+             std::string ParentPath() const {return parentpath;}
              };
       typedef std::map<st_key,std::list<Soundfile> > t_filemap;
       t_filemap filemap;
       std::string mainpath;
 
-      void looking_for_subpaths();
+//      void looking_for_subpaths();
       void read_subdirs();
       void read_dir(const st_key &key);
       void get_file_info();

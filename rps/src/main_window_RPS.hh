@@ -45,6 +45,8 @@ class main_window_RPS : public main_window_RPS_glade
         Glib::RefPtr<Gtk::TreeStore> m_refTreeModelSelect;
 
         void fill_columns();
+        void fill_columns_recursive(const int level,Gtk::TreeModel::Row *prow=NULL,
+                                    const std::string path="");
         void fill_soundfiles(const std::list<Soundfile> &VS,Gtk::TreeModel::Row &row);
         void fill_playlist();
         void entry_selected() ;

@@ -50,13 +50,13 @@ BUILD_INCLUDED_LIBINTL = no
 CATOBJEXT = .gmo
 CC = gcc
 CCDEPMODE = depmode=gcc3
-CFLAGS = -g -O2
+CFLAGS = -g -O0
 CPP = gcc -E
 CPPFLAGS = 
 CXX = g++
 CXXCPP = g++ -E
 CXXDEPMODE = depmode=gcc3
-CXXFLAGS = -g -O2
+CXXFLAGS = -g -O0
 CYGPATH_W = echo
 DATADIRNAME = share
 DEFS = -DHAVE_CONFIG_H
@@ -68,7 +68,7 @@ ECHO_T =
 EGREP = grep -E
 EXEEXT = 
 F77 = g77
-FFLAGS = -g -O2
+FFLAGS = -g -O0
 GENCAT = gencat
 GETTEXT_PACKAGE = rpgs
 GLIBC21 = yes
