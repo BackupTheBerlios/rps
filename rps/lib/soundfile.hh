@@ -62,12 +62,13 @@ class Soundfile : public SoundfileBase
    private:
       asd_sound_identifier asdi;
       Volume volume;
+      gchar* prozent_to_asd(const int p);
    public:
       asd_sound_identifier getASDI() const {return asdi;}
 
       void setClient(const asd_sound_identifier &a) {asdi=a;}
-      void set_volume(const double v);
-      void get_volume();
+      void set_volume(AsdConnection *c,const int v);
+      void get_volume(AsdConnection *c);
 #endif
       
 };

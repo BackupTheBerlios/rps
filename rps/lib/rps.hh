@@ -8,7 +8,6 @@
 
 #if ASDSUPPORT
 extern "C" {
-#include <asdlib.h>
 #include <asd_sound.hh>
 }
 #endif

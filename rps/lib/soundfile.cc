@@ -54,13 +54,42 @@ std::string Soundfile::IsPlayedStr() const
 }
 
 #if ASDSUPPORT
-void Soundfile::set_volume(const double v)
+std::string itos(int i)
 {
+ char buffer[100];
+ snprintf(buffer,sizeof buffer,"%i",i);
+ return(buffer);
+}
+   
+   
+
+gchar* Soundfile::prozent_to_asd(const int p)
+{
+   int i = int(65535./100*p);
+   std::string s=itos(i)+","+itos(i);
+   return const_cast<gchar*>(s.c_str());
 }
 
-void get_volume()
+void Soundfile::set_volume(AsdConnection *c,const int v)
 {
+   volume_parse(&volume, prozent_to_asd(v));
+   if (!asd_volume_set(c,  asdi.getASDI(), volume))
+     perror("Could not set device volume");
+                                   
 }
+
+void Soundfile::get_volume(AsdConnection *c)
+{
+  if (!asd_volume_get(c, asdi.getASDI() , &volume))
+    perror("Could not get device volume");
+  else
+  {
+    gchar t[256];
+    volume_to_string(&volume, t, sizeof(t));
+    g_print("Volume of device '%s' is %s\n",  asdi.getASDI(), t);
+  }                                        
+}
+
 #endif
 
 
