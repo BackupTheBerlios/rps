@@ -2,6 +2,7 @@
 #include <string>
 #include <soundfile.hh>
 #include <list>
+#include <vector>
 #include <assert.h>
 
 class FileListCache
@@ -43,7 +44,7 @@ class FileList
              };
       typedef std::map<st_key,std::list<Soundfile> > t_filemap;
       t_filemap filemap;
-      std::string mainpath;
+      std::vector<std::string> mainpath;
 
 //      void looking_for_subpaths();
       void read_subdirs();
@@ -52,11 +53,11 @@ class FileList
       FileListCache FLC;
    public:
       FileList() {}
-      FileList(const std::string &s);
+      FileList(const std::vector<std::string> &path);
       ~FileList() { save_cache(); }
 
       void save_cache() const;
-      const std::string MainPath() const {return mainpath;}
+      const std::vector<std::string> MainPath() const {return mainpath;}
       void set_default_volume(const Soundfile &s,const int dv);
       int get_default_volume(const Soundfile &s) const;
       std::list<Soundfile> get_cd_file_list(const std::string &cd) const;

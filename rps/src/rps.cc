@@ -20,8 +20,10 @@ int main(int argc, char **argv)
    
    Gtk::Main m(&argc, &argv);
 
-   std::string path;
-   if(argc==2) path = argv[1];
+   std::vector<std::string> path;
+   for(int i=2;i<=argc;++i) path.push_back(argv[i-1]);
+
+//   if(argc==2) path = argv[1];
 
    main_window_RPS *main_window_RPS = new class main_window_RPS(path);
    m.run(*main_window_RPS);

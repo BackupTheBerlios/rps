@@ -55,7 +55,7 @@ class main_window_RPS : public main_window_RPS_glade
 
         std::vector<Soundfile> cd;
    public:
-        main_window_RPS(const std::string &m);
+        main_window_RPS(const std::vector<std::string> &path);
         ~main_window_RPS();
       
         RPS &getRPS() {return rpgs;}
@@ -70,6 +70,7 @@ class main_window_RPS : public main_window_RPS_glade
         void on_togglebutton_repeat_toggled();
         void on_button_quit_clicked();
         void on_button_stop_CD_clicked();
+        void on_button_stop_now_clicked();
         void on_togglebutton_kill_on_new_toggled();
         void on_togglebutton_play_dir_toggled();
         void on_treeview_main_row_activated(const Gtk::TreeModel::Path& path, Gtk::TreeViewColumn* column);

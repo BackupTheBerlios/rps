@@ -19,11 +19,11 @@ class RPS
       bool repeat,kill_on_new;
 
       void save_conf() const;
-      void load_conf(std::string &path) const;
+      void load_conf(std::vector<std::string> &path) const;
 
       std::list<Soundfile> PSL;
    public:
-      RPS(const std::string &newpath);
+      RPS(const std::vector<std::string> &newpath);
       ~RPS() {stop_playing(); save_conf();}
 
       const PlayList &getPlayList() const {return playlist;}

@@ -18,8 +18,8 @@
 
 main_window_RPS *main_window_RPS::self_main_window_RPS;
 
-main_window_RPS::main_window_RPS(const std::string &m)
-: rpgs(m)
+main_window_RPS::main_window_RPS(const std::vector<std::string> &path)
+: rpgs(path)
 {
    rpgs.getPlayList().SigPlaylistChanged().connect(
       SigC::slot(*this,&main_window_RPS::signal_playlist_cachanged));
@@ -30,7 +30,7 @@ main_window_RPS::main_window_RPS(const std::string &m)
    togglebutton_kill_on_new->set_active(rpgs.getKillOnNew());
    togglebutton_play_dir->set_active(true);
    
-   get_window()->move(50,80);
+   get_window()->move(50,10);
    set_size_request(800,700);
 }
 
@@ -72,12 +72,16 @@ void main_window_RPS::fill_columns_recursive(const int level,
      if(i->first.sub_level == level) 
       {
         if( !parentpath.empty() && parentpath!=i->first.subpath ) continue;
+
         if(prow==NULL) row = *(m_refTreeModelSelect->append()); 
         else row = *(m_refTreeModelSelect->append(prow->children()));
+
         row[m_ColumnsSound.col_name] = i->first.subpath;
+
         if(i->first.path.find("/CDs/") == std::string::npos)
              row[m_ColumnsSound.is_cd] = false;
         else row[m_ColumnsSound.is_cd] = true;
+
         fill_soundfiles(i->second,row);
       }
      else if(i->first.sub_level == level+1)
@@ -97,29 +101,7 @@ void main_window_RPS::fill_columns()
   treeview_main->columns_autosize();
 
   fill_columns_recursive(1);
-#if 0
-  //Fill the TreeView's model
-  Gtk::TreeModel::Row cd_row = *(m_refTreeModelSelect->append()); 
-  cd_row[m_ColumnsSound.col_name] = "CDs";
 
-  for(FileList::const_iterator i=rpgs.getFileList().begin();i!=rpgs.getFileList().end();++i)
-   {
-     if(i->first.path.find("/CDs/") == std::string::npos )
-      {
-        Gtk::TreeModel::Row row = *(m_refTreeModelSelect->append());
-        row[m_ColumnsSound.col_name] = i->first.subpath;
-        row[m_ColumnsSound.is_cd] = false;
-        fill_soundfiles(i->second,row);
-      }
-     else 
-      {
-        Gtk::TreeModel::Row row = *(m_refTreeModelSelect->append(cd_row.children()));
-        row[m_ColumnsSound.col_name] = i->first.subpath;
-        row[m_ColumnsSound.is_cd] = true;
-        fill_soundfiles(i->second,row);
-      }
-   }  
-#endif
   //Add the TreeView's view columns:
   treeview_main->append_column("Sound", m_ColumnsSound.col_name);
 #if 0
@@ -145,7 +127,7 @@ void main_window_RPS::fill_soundfiles(const std::list<Soundfile> &VS,Gtk::TreeMo
 
 void main_window_RPS::fill_playlist()
 {
-  scrolledwindow_playlist->remove();
+  viewport_playlist->remove();
   Gtk::VBox *box = manage(new class Gtk::VBox());
   for(PlayList::iterator i=rpgs.getPlayList().begin();i!=rpgs.getPlayList().end();++i)
    {
@@ -153,7 +135,7 @@ void main_window_RPS::fill_playlist()
       box->pack_start(*sw,false,false);
    }
   box->show_all();
-  scrolledwindow_playlist->add(*box);
+  viewport_playlist->add(*box);
 }                    
 
 void main_window_RPS::on_button_quit_clicked() 
@@ -266,4 +248,9 @@ void main_window_RPS::on_togglebutton_kill_on_new_toggled()
 void main_window_RPS::on_button_stop_CD_clicked()
 {
    rpgs.stop_CD();
+}
+
+void main_window_RPS::on_button_stop_now_clicked()
+{
+   rpgs.stop_playing();
 }

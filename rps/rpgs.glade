@@ -37,7 +37,7 @@
 		<widget class="GtkToolbar" id="toolbar_main">
 		  <property name="visible">True</property>
 		  <property name="orientation">GTK_ORIENTATION_HORIZONTAL</property>
-		  <property name="toolbar_style">GTK_TOOLBAR_BOTH</property>
+		  <property name="toolbar_style">GTK_TOOLBAR_BOTH_HORIZ</property>
 		  <property name="tooltips">True</property>
 
 		  <child>
@@ -59,20 +59,26 @@
 		      <property name="visible">True</property>
 		      <property name="tooltip" translatable="yes">Starts to play a CD on expanding the node.</property>
 		      <property name="can_focus">True</property>
-		      <property name="label" translatable="yes">Play CD</property>
+		      <property name="label" translatable="yes">Play
+CDs</property>
 		      <property name="use_underline">True</property>
-		      <property name="stock_pixmap">gtk-jump-to</property>
+		      <property name="stock_pixmap">gtk-cdrom</property>
 		      <property name="active">False</property>
 		      <property name="inconsistent">False</property>
+		      <property name="new_group">True</property>
 		      <signal name="toggled" handler="on_togglebutton_play_dir_toggled" last_modification_time="Sun, 05 Oct 2003 06:42:50 GMT"/>
 		    </widget>
+		    <packing>
+		      <property name="new_group">True</property>
+		    </packing>
 		  </child>
 
 		  <child>
 		    <widget class="button" id="button_stop_CD">
 		      <property name="visible">True</property>
 		      <property name="tooltip" translatable="yes">CD stops when the actual piece is done. </property>
-		      <property name="label" translatable="yes">Stop CD</property>
+		      <property name="label" translatable="yes">Stop
+CD</property>
 		      <property name="use_underline">True</property>
 		      <property name="stock_pixmap">gtk-stop</property>
 		      <signal name="clicked" handler="on_button_stop_CD_clicked" last_modification_time="Mon, 06 Oct 2003 11:00:56 GMT"/>
@@ -90,8 +96,12 @@
 		      <property name="stock_pixmap">gtk-refresh</property>
 		      <property name="active">False</property>
 		      <property name="inconsistent">False</property>
+		      <property name="new_group">True</property>
 		      <signal name="toggled" handler="on_togglebutton_repeat_toggled" last_modification_time="Tue, 23 Sep 2003 08:23:47 GMT"/>
 		    </widget>
+		    <packing>
+		      <property name="new_group">True</property>
+		    </packing>
 		  </child>
 
 		  <child>
@@ -100,12 +110,30 @@
 		      <property name="visible">True</property>
 		      <property name="tooltip" translatable="yes">Selecting a piece will stop all other ones immediatly.</property>
 		      <property name="can_focus">True</property>
-		      <property name="label" translatable="yes">Kill on new</property>
+		      <property name="label" translatable="yes">Stop
+on new</property>
 		      <property name="use_underline">True</property>
 		      <property name="stock_pixmap">gtk-cut</property>
 		      <property name="active">False</property>
 		      <property name="inconsistent">False</property>
+		      <property name="new_group">True</property>
 		      <signal name="toggled" handler="on_togglebutton_kill_on_new_toggled" last_modification_time="Tue, 23 Sep 2003 10:29:16 GMT"/>
+		    </widget>
+		    <packing>
+		      <property name="new_group">True</property>
+		    </packing>
+		  </child>
+
+		  <child>
+		    <widget class="button" id="button_stop_now">
+		      <property name="visible">True</property>
+		      <property name="tooltip" translatable="yes">Stops playing immediatly</property>
+		      <property name="can_focus">True</property>
+		      <property name="label" translatable="yes">Stop
+now</property>
+		      <property name="use_underline">True</property>
+		      <property name="stock_pixmap">gtk-stop</property>
+		      <signal name="clicked" handler="on_button_stop_now_clicked" last_modification_time="Fri, 10 Oct 2003 11:17:35 GMT"/>
 		    </widget>
 		  </child>
 		</widget>
@@ -164,7 +192,6 @@
 	      <child>
 		<widget class="GtkScrolledWindow" id="scrolledwindow_playlist">
 		  <property name="width_request">250</property>
-		  <property agent="glademm" name="cxx_visibility">protected</property>
 		  <property name="visible">True</property>
 		  <property name="can_focus">True</property>
 		  <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>

@@ -64,7 +64,7 @@ class Soundfile : public SoundfileBase
       std::string RepeatStr() const;
       bool Played() const {return is_played;}
 
-      void play(const std::string &mainpath,const bool repeatbool) ; 
+      void play(const bool repeatbool) ; 
       void stop_playing();
       int MpgPid() const {return mpgpid;}
       int AsdPid() const {return asdpid;}

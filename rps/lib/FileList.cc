@@ -4,14 +4,15 @@
 #include<vector>
 #include <sys/stat.h>
 
-
-FileList::FileList(const std::string &s)
-: mainpath(s) 
+FileList::FileList(const std::vector<std::string> &path)
+//: mainpath(s) 
 {
    FLC.load_cache();
-   st_key key(mainpath,0);
-   read_dir(key);
-
+   for(std::vector<std::string>::const_iterator i=path.begin();i!=path.end();++i)
+    {
+      st_key key(*i,0);
+      read_dir(key);
+    }
    get_file_info();
    for(t_filemap::iterator i=filemap.begin();i!=filemap.end();++i)
       i->second.sort();      
@@ -71,19 +72,39 @@ void FileList::get_file_info()
           }
          else
           {
-            std::string cmd="qmp3info -s "+j->Filename();
-            char buf[100];
-            FILE *ptr;
-            if ((ptr = popen(cmd.c_str(), "r")) != NULL)
-            while (fgets(buf, BUFSIZ, ptr) != NULL)
-              {
-                std::string time=buf;
-                j->setTime(time);
-               }
-            pclose(ptr);
+            std::vector<std::pair<std::string,std::string> > com;
+            com.push_back(std::pair<std::string,std::string>
+               ("qmp3info -s "+j->Filename(),"=>"));
+            com.push_back(std::pair<std::string,std::string>
+               ("checkmp3 "+j->Filename(),"SONG_LENGTH"));
+            for(std::vector<std::pair<std::string,std::string> >::
+               const_iterator i=com.begin();i!=com.end();++i)
+             {
+               char buf[100];
+               FILE *ptr;
+               if ((ptr = popen(i->first.c_str(), "r")) != NULL)
+               while (fgets(buf, BUFSIZ, ptr) != NULL)
+                 {
+                   std::string time=buf;
+                   if(time.find(i->second)!=std::string::npos)
+                    {
+#if 0
+std::cout << j->Name()<<"\t@"<<time<<"@\n";
+#endif
+                      j->setTime(time.substr(time.find(i->second)
+                                    +i->second.size(),std::string::npos));
+                      if(j->Time()!="0:00") goto loop_break;
+                    }
+                  }
+               pclose(ptr);
+             }
           }
+loop_break:
+;
+#if 1
          std::cout << "  "<<j->Filename()<<' '<<j->Time()<<' '
                    <<j->DefaultVolume()<<'\n';
+#endif
        }
     }
 }

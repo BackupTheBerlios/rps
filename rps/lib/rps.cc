@@ -7,7 +7,7 @@
 #endif
 
 
-RPS::RPS(const std::string &newpath) 
+RPS::RPS(const std::vector<std::string> &newpath) 
 : repeat(false),kill_on_new(false)
 {
 #if ASDSUPPORT
@@ -19,11 +19,12 @@ RPS::RPS(const std::string &newpath)
     }
 #endif
 
-   std::string path="None in ~/.rps.rc";
+
+   std::vector<std::string> path;
    load_conf(path);
    if(path.empty() && newpath.empty()) 
-     { std::cerr << " Unknown pathes: \n\t"<<path<<"\n\t"<<newpath
-                 <<"\n , please use the -d<path> option\n";
+     { std::cerr << " Unknown paths, please append valid paths to the\n"
+                    " comand line or edit $HOME/.rps.rc\n";
        exit(1);
      }
    if(!newpath.empty()) path=newpath;
@@ -73,7 +74,7 @@ void RPS::play(Soundfile &s)
 //<<s.DefaultVolume()<<'\n';
    if(kill_on_new) stop_playing();
 
-   s.play(getFileList().MainPath(),repeat);
+   s.play(repeat);
 #ifdef ASDSUPPORT
    AsdConnection *asdcon = asd_connection_new(NULL) ;
    if (!asdcon)
@@ -131,10 +132,12 @@ void RPS::save_conf() const
    std::string sname=getenv("HOME")+std::string("/.rps.rc");
    std::ofstream fo(sname.c_str());
    std::cout << "Saving "<<sname<<'\n';
-   fo << "Path="<<filelist.MainPath()<<'\n';
+   const std::vector<std::string> &mp=filelist.MainPath();
+   for(std::vector<std::string>::const_iterator i=mp.begin();i!=mp.end();++i)
+      fo << "Path="<<*i<<'\n';
 }
 
-void RPS::load_conf(std::string &path) const
+void RPS::load_conf(std::vector<std::string> &path) const
 {
    std::string sname=getenv("HOME")+std::string("/.rps.rc");
    std::ifstream fi(sname.c_str());
@@ -149,6 +152,6 @@ void RPS::load_conf(std::string &path) const
        if(!fi.good()) break; 
        std::string::size_type _a = line.find(search_string);
        if(_a!=std::string::npos) 
-         path=line.substr(search_string.size(),std::string::npos);
+         path.push_back(line.substr(search_string.size(),std::string::npos));
      }                            
 }

@@ -3,7 +3,7 @@
 #include <errno.h>
 #include <iostream>
 
-void Soundfile::play(const std::string &mainpath,const bool repeatbool)
+void Soundfile::play(const bool repeatbool)
 {
    repeat=repeatbool;
 
@@ -165,6 +165,9 @@ void SoundfileBase::setTime(const std::string &_time)
      {
        smin=_time.substr(0,_time.find(":"));
        ssec=_time.substr(_time.find(":")+1,std::string::npos);
+#if 0
+std::cout<<"TXX"<< _time<<"XX\t"<<smin<<'\t'<<ssec<<'\n';
+#endif
      }
    else
      {
