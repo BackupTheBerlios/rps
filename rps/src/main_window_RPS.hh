@@ -22,12 +22,12 @@
 
 class main_window_RPS : public main_window_RPS_glade
 {  
-        
+   public:
+        static main_window_RPS *self_main_window_RPS;
    private:
         RPS rpgs;
 
         static void signalhandler(int signr);
-        static main_window_RPS *self;
 
         //Tree model columns:
         class ModelColumnsSound : public Gtk::TreeModel::ColumnRecord
@@ -39,10 +39,8 @@ class main_window_RPS : public main_window_RPS_glade
            Gtk::TreeModelColumn<std::string> col_time;
            Gtk::TreeModelColumn<int>         colI1;
            Gtk::TreeModelColumn<Soundfile> sound;
-//           Gtk::TreeModelColumn<Gtk::HScale*> scale;
 
            ModelColumnsSound() { add(col1); add(col2); add(col_time); add(colI1); add(sound); }
-//           ModelColumnsSound() { add(col1); add(col2); add(colI1); add(sound); add(scale); }
 
           };
         ModelColumnsSound m_ColumnsSound;
@@ -52,12 +50,13 @@ class main_window_RPS : public main_window_RPS_glade
         void fill_columns();
         void fill_playlist();
         void entry_selected() ;
-        void playlist_entry_selected();
         void signal_playlist_cachanged() {fill_playlist();}
 
    public:
         main_window_RPS(const std::string &m);
         ~main_window_RPS();
+      
+        RPS &getRPS() {return rpgs;}
 
    private:
 #if 1
@@ -76,9 +75,6 @@ class main_window_RPS : public main_window_RPS_glade
         void on_treeview_main_toggle_cursor_row();
         void on_treeview_main_start_interactive_search();
 #endif
-        void on_treeview_playlist_row_activated(const Gtk::TreeModel::Path& path, Gtk::TreeViewColumn* column);
-        bool on_treeview_playlist_button_release_event(GdkEventButton *ev);
-
 
 };
 #endif

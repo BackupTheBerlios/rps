@@ -16,14 +16,14 @@
 #include <gdk/gdkkeysyms.h> 
 #include <sound_widget.hh>
 
-main_window_RPS *main_window_RPS::self;
+main_window_RPS *main_window_RPS::self_main_window_RPS;
 
 main_window_RPS::main_window_RPS(const std::string &m)
 : rpgs(m)
 {
    rpgs.getPlayList().SigPlaylistChanged().connect(
       SigC::slot(*this,&main_window_RPS::signal_playlist_cachanged));
-   self=this;
+   self_main_window_RPS=this;
    signal(SIGCHLD,&signalhandler);
    togglebutton_repeat->set_active(rpgs.getRepeat());
    togglebutton_kill_on_new->set_active(rpgs.getKillOnNew());
@@ -45,7 +45,7 @@ std::cout << "  "<<WIFEXITED(result)<<' '<<WEXITSTATUS(result)<<' '
           << WIFSIGNALED(result)<<' '<<WTERMSIG(result)<<' '
           << WIFSTOPPED(result)<< ' '<<WSTOPSIG(result)<<'\n';
 #endif
-      if(WIFEXITED(result)) self->rpgs.remove_from_playlist(pid);
+      if(WIFEXITED(result)) self_main_window_RPS->rpgs.remove_from_playlist(pid);
     }
 //  signal(SIGCHLD,&signalhandler);
 }
@@ -93,43 +93,15 @@ void main_window_RPS::fill_columns()
 
 void main_window_RPS::fill_playlist()
 {
-//std::cout << "Fill playlist\n";
-  treeview_playlist->remove_all_columns();
-  m_refTreeModelPlayList = Gtk::TreeStore::create(m_ColumnsSound);
-  treeview_playlist->set_model(m_refTreeModelPlayList);
-  //Fill the TreeView's model
-  for(PlayList::const_iterator i=rpgs.getPlayList().begin();i!=rpgs.getPlayList().end();++i)
-   {
-     Gtk::TreeModel::Row row = *(m_refTreeModelPlayList->append());
-     row[m_ColumnsSound.col1] = i->RepeatStr();
-     row[m_ColumnsSound.col_time] = i->Time();
-     row[m_ColumnsSound.col2] = i->Name();
-     row[m_ColumnsSound.colI1] = i->getASDI().getID();
-     row[m_ColumnsSound.sound] = *i;
-#if 0
-     Gtk::Adjustment *vs_ma = manage(new class Gtk::Adjustment
-                              (100-i->get_volume(), 0, 100, 1, 1, 1));
-     Gtk::HScale *vs_sc = manage(new class Gtk::HScale(*vs_ma));                                             
-     row[m_ColumnsSound.scale] = vs_sc;
-#endif
-   }  
-  //Add the TreeView's view columns:
-  treeview_playlist->append_column("Rep.", m_ColumnsSound.col1);
-  treeview_playlist->append_column("Time", m_ColumnsSound.col_time);
-  treeview_playlist->append_column("Sound", m_ColumnsSound.col2);
-  treeview_playlist->append_column("Id", m_ColumnsSound.colI1);
-//  treeview_playlist->append_column("Scale", m_ColumnsSound.scale);
-
-
   scrolledwindow_playlist->remove();
-  Gtk::HBox *hbox = manage(new class Gtk::HBox());
+  Gtk::VBox *box = manage(new class Gtk::VBox());
   for(PlayList::iterator i=rpgs.getPlayList().begin();i!=rpgs.getPlayList().end();++i)
    {
-      sound_widget sw(*i);
-      hbox->pack_start(sw);
+      sound_widget *sw =  manage(new class sound_widget(*i));
+      box->pack_start(*sw,false,false);
    }
-  scrolledwindow_playlist->add(*hbox);
-  hbox->show_all();
+  box->show_all();
+  scrolledwindow_playlist->add(*box);
 }                    
 
 void main_window_RPS::on_button_quit_clicked() 
@@ -162,19 +134,6 @@ void main_window_RPS::entry_selected()
         {
          rpgs.play(s);
         }
-    }
-}
-
-void main_window_RPS::playlist_entry_selected()
-{
-//std::cout << "entry_playlist_selected \n";
-   Glib::RefPtr<Gtk::TreeSelection> sel = treeview_playlist->get_selection();
-   Gtk::TreeModel::iterator iter = sel->get_selected();
-   if(iter) //If anything is selected
-    {
-      Gtk::TreeModel::Row row = *iter;
-      Soundfile s = row[m_ColumnsSound.sound];
-      rpgs.remove_from_playlist(s,true);
     }
 }
 
@@ -223,6 +182,7 @@ void main_window_RPS::on_togglebutton_kill_on_new_toggled()
 }
 
 
+#if 0
 void main_window_RPS::on_treeview_playlist_row_activated(const Gtk::TreeModel::Path& path, Gtk::TreeViewColumn* column)
 {  
    if(treeview_main->row_expanded(path))
@@ -237,3 +197,4 @@ bool main_window_RPS::on_treeview_playlist_button_release_event(GdkEventButton *
    return 0;
 }
 
+#endif
