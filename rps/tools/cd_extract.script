@@ -5,7 +5,7 @@ function read_cd()
 {
    mkdir DDD
    cd DDD
-   cdparanoia -B
+   nice -20 cdparanoia -B
    cd ..
 }
 
@@ -14,7 +14,7 @@ function read_cd()
 function encode()
 {
    cd DDD
-   mlame -o "--vbr-new -h" *.wav
+   nice -20 mlame -o "--vbr-new -h" *.wav
    cd ..
 }
 
