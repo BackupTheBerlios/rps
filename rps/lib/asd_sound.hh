@@ -3,7 +3,10 @@
 #include <../config.h>
 
 #if ASDSUPPORT
+extern "C" {
 #include <asdlib.h>
+#include <volume.h>
+}
 #include <string>
 
 class asd_sound_identifier

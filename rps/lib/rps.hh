@@ -7,9 +7,7 @@
 #include <../config.h>
 
 #if ASDSUPPORT
-extern "C" {
 #include <asd_sound.hh>
-}
 #endif
 
 class RPS

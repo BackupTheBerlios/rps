@@ -72,14 +72,15 @@ gchar* Soundfile::prozent_to_asd(const int p)
 
 void Soundfile::set_volume(AsdConnection *c,const int v)
 {
+   Volume volume;
    volume_parse(&volume, prozent_to_asd(v));
    if (!asd_volume_set(c,  asdi.getASDI(), volume))
      perror("Could not set device volume");
-                                   
 }
 
-void Soundfile::get_volume(AsdConnection *c)
+int Soundfile::get_volume(AsdConnection *c)
 {
+  Volume volume;
   if (!asd_volume_get(c, asdi.getASDI() , &volume))
     perror("Could not get device volume");
   else
@@ -88,6 +89,7 @@ void Soundfile::get_volume(AsdConnection *c)
     volume_to_string(&volume, t, sizeof(t));
     g_print("Volume of device '%s' is %s\n",  asdi.getASDI(), t);
   }                                        
+ return 98;
 }
 
 #endif
