@@ -3,7 +3,6 @@
 
 SUBDIRS = lib src 
 
-EXTRA_DIST = config.rpath mkinstalldirs  config.rpath mkinstalldirs  config.rpath mkinstalldirs  config.rpath mkinstalldirs  config.rpath mkinstalldirs  AUTHORS TODO README configure 
+EXTRA_DIST = config.rpath mkinstalldirs  config.rpath mkinstalldirs  config.rpath mkinstalldirs  config.rpath mkinstalldirs  AUTHORS TODO README configure 
 
-
-ACLOCAL_AMFLAGS = -I m4
+#ACLOCAL_AMFLAGS = -I m4
