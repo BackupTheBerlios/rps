@@ -34,14 +34,13 @@ class main_window_RPS : public main_window_RPS_glade
          {
            public:
 
-           Gtk::TreeModelColumn<std::string> col1;
-           Gtk::TreeModelColumn<std::string> col2;
+           Gtk::TreeModelColumn<std::string> col_name;
            Gtk::TreeModelColumn<std::string> col_time;
-           Gtk::TreeModelColumn<int>         colI1;
+//           Gtk::TreeModelColumn<int>         colI1;
            Gtk::TreeModelColumn<Soundfile> sound;
 //           Gtk::TreeModelColumn<bool> is_cd;
 
-           ModelColumnsSound() { add(col1); add(col2); add(col_time); add(colI1); add(sound); }
+           ModelColumnsSound() { add(col_name); add(col_time); add(sound); }
 
           };
         ModelColumnsSound m_ColumnsSound;

@@ -25,10 +25,10 @@ main_window_RPS::main_window_RPS(const std::string &m)
       SigC::slot(*this,&main_window_RPS::signal_playlist_cachanged));
    self_main_window_RPS=this;
    signal(SIGCHLD,&signalhandler);
+   fill_columns();
    togglebutton_repeat->set_active(rpgs.getRepeat());
    togglebutton_kill_on_new->set_active(rpgs.getKillOnNew());
    togglebutton_play_dir->set_active(true);
-   fill_columns();
    
    get_window()->move(10,80);
    set_size_request(800,700);
@@ -71,28 +71,27 @@ void main_window_RPS::fill_columns()
 
   //Fill the TreeView's model
   Gtk::TreeModel::Row cd_row = *(m_refTreeModelSelect->append()); 
-  cd_row[m_ColumnsSound.col1] = "CDs";
+  cd_row[m_ColumnsSound.col_name] = "CDs";
   for(FileList::const_iterator i=rpgs.getFileList().begin();i!=rpgs.getFileList().end();++i)
    {
      if(i->first.path.find("/CDs/") == std::string::npos )
       {
         Gtk::TreeModel::Row row = *(m_refTreeModelSelect->append());
-        row[m_ColumnsSound.col1] = i->first.subpath;
+        row[m_ColumnsSound.col_name] = i->first.subpath;
 //        row[m_ColumnsSound.is_cd] = false;
         fill_soundfiles(i->second,row);
       }
      else 
       {
         Gtk::TreeModel::Row row = *(m_refTreeModelSelect->append(cd_row.children()));
-        row[m_ColumnsSound.col1] = i->first.subpath;
+        row[m_ColumnsSound.col_name] = i->first.subpath;
 //        row[m_ColumnsSound.is_cd] = true;
         fill_soundfiles(i->second,row);
       }
    }  
   //Add the TreeView's view columns:
-  treeview_main->append_column("Path", m_ColumnsSound.col1);
+  treeview_main->append_column("Sound", m_ColumnsSound.col_name);
   treeview_main->append_column("Time", m_ColumnsSound.col_time);
-  treeview_main->append_column("Soundfile", m_ColumnsSound.col2);
   treeview_main->queue_resize();
   treeview_main->set_enable_search(true);
   treeview_main->grab_focus();
@@ -104,8 +103,7 @@ void main_window_RPS::fill_soundfiles(const std::vector<Soundfile> &VS,Gtk::Tree
    for(std::vector<Soundfile>::const_iterator j=VS.begin();j!=VS.end();++j)
     {
       Gtk::TreeModel::Row childrow = *(m_refTreeModelSelect->append(row.children()));
-//      childrow[m_ColumnsSound.col1] = j->SubPath();
-      childrow[m_ColumnsSound.col2] = j->Name();
+      childrow[m_ColumnsSound.col_name] = j->Name();
       childrow[m_ColumnsSound.col_time] = j->Time();
       childrow[m_ColumnsSound.sound] = *j;
     }
@@ -148,8 +146,8 @@ std::cout << "ACI\n";
    if(iter) //If anything is selected
     {
       Gtk::TreeModel::Row row = *iter;
-      std::string s1 = row[m_ColumnsSound.col1];
-      std::string s2 = row[m_ColumnsSound.col2];
+      std::string s1 = row[m_ColumnsSound.col_name];
+      std::string s2 = row[m_ColumnsSound.col_time];
 std::cout << s1 <<'\t'<<s2<<'\t'<<  '\n';
     }
 }
@@ -169,8 +167,8 @@ void main_window_RPS::entry_selected()
    if(iter) //If anything is selected
     {
       Gtk::TreeModel::Row row = *iter;
-      std::string col1 = row[m_ColumnsSound.col1];
-      std::string col2 = row[m_ColumnsSound.col2];
+      std::string col1 = row[m_ColumnsSound.col_name];
+      std::string col2 = row[m_ColumnsSound.col_time];
       Soundfile s = row[m_ColumnsSound.sound];
       bool playdir = togglebutton_play_dir->get_active();
 std::cout <<(col1=="CDs") <<' '<<!col2.empty()<<'\t'<<'\t'<<playdir<<'\n';
