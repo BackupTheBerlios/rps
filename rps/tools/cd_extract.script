@@ -22,7 +22,7 @@ function encode()
 function get_database()
 {
    disc-cover -D /dev/sr0 -t txt -o - > temp.txt
-   less temp.txt
+   cat temp.txt
 }
 
 #4 Titel ersetzen
@@ -32,8 +32,8 @@ function set_files()
    rm temp.txt
 }
 
-
+disc-cover -D /dev/sr0 -t txt -o -
+get_database
 read_cd
 encode
-get_database
 set_files
