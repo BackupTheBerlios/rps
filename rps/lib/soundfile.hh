@@ -5,7 +5,6 @@
 
 #if ASDSUPPORT
 #include <asd_sound.hh>
-#include <volume.h>
 #endif
 
 class SoundfileBase
