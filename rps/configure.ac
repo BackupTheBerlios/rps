@@ -1,8 +1,8 @@
 # generated 2003/9/21 13:35:54 CEST by thoma@Tiger.(none)
 # using glademm V2.0.0b
 
-AC_INIT(src/rpgs.cc)
-AM_INIT_AUTOMAKE(rpgs, 0.0)
+AC_INIT(src/rps.cc)
+AM_INIT_AUTOMAKE(rps, 0.0)
 AM_CONFIG_HEADER(config.h)
 
 AC_ISC_POSIX
@@ -47,4 +47,4 @@ AC_SUBST(GTKMM_LIBS)
 AC_DEFINE(ASDSUPPORT,1,"[ with asd support ]")
 AC_INCLUDES="-I/usr/src/asd4-0.2/"
 
-AC_OUTPUT(Makefile lib/Makefile src/Makefile )
+AC_OUTPUT(Makefile lib/Makefile src/Makefile tools/Makefile)

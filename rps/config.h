@@ -12,7 +12,7 @@
  * which glade-- uses.
  */
 #define ASDSUPPORT 1
-#define PACKAGE "rpgs"
+#define PACKAGE "rps"
 #define VERSION "0.0"
 #define ENABLE_NLS 1
 /* #undef HAVE_CATGETS */
@@ -205,7 +205,7 @@
 #define INTDIV0_RAISES_SIGFPE 1
 
 /* Name of package */
-#define PACKAGE "rpgs"
+#define PACKAGE "rps"
 
 /* Define to the address where bug reports for this package should be sent. */
 #define PACKAGE_BUGREPORT ""

@@ -33,7 +33,7 @@ function set_files()
 }
 
 
-#read_cd
-#encode
+read_cd
+encode
 get_database
 set_files

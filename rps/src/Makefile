@@ -17,9 +17,9 @@
 srcdir = .
 top_srcdir = ..
 
-pkgdatadir = $(datadir)/rpgs
-pkglibdir = $(libdir)/rpgs
-pkgincludedir = $(includedir)/rpgs
+pkgdatadir = $(datadir)/rps
+pkglibdir = $(libdir)/rps
+pkgincludedir = $(includedir)/rps
 top_builddir = ..
 
 am__cd = CDPATH="$${ZSH_VERSION+.}$(PATH_SEPARATOR)" && cd
@@ -104,7 +104,7 @@ MKINSTALLDIRS = $(top_builddir)/./mkinstalldirs
 MSGFMT = /usr/bin/msgfmt
 MSGMERGE = /usr/bin/msgmerge
 OBJEXT = o
-PACKAGE = rpgs
+PACKAGE = rps
 PACKAGE_BUGREPORT = 
 PACKAGE_NAME = 
 PACKAGE_STRING = 

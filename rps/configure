@@ -424,7 +424,7 @@ PACKAGE_VERSION=
 PACKAGE_STRING=
 PACKAGE_BUGREPORT=
 
-ac_unique_file="src/rpgs.cc"
+ac_unique_file="src/rps.cc"
 # Factoring default headers for most tests.
 ac_includes_default="\
 #include <stdio.h>
@@ -1741,7 +1741,7 @@ fi
 
 
 # Define the identity of the package.
- PACKAGE=rpgs
+ PACKAGE=rps
  VERSION=0.0
 
 
@@ -23598,7 +23598,7 @@ _ACEOF
 
 AC_INCLUDES="-I/usr/src/asd4-0.2/"
 
-                              ac_config_files="$ac_config_files Makefile lib/Makefile src/Makefile"
+                                        ac_config_files="$ac_config_files Makefile lib/Makefile src/Makefile tools/Makefile"
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
 # tests run on this system so they can be shared between configure
@@ -24171,6 +24171,7 @@ do
   "Makefile" ) CONFIG_FILES="$CONFIG_FILES Makefile" ;;
   "lib/Makefile" ) CONFIG_FILES="$CONFIG_FILES lib/Makefile" ;;
   "src/Makefile" ) CONFIG_FILES="$CONFIG_FILES src/Makefile" ;;
+  "tools/Makefile" ) CONFIG_FILES="$CONFIG_FILES tools/Makefile" ;;
   "depfiles" ) CONFIG_COMMANDS="$CONFIG_COMMANDS depfiles" ;;
   "default-1" ) CONFIG_COMMANDS="$CONFIG_COMMANDS default-1" ;;
   "config.h" ) CONFIG_HEADERS="$CONFIG_HEADERS config.h" ;;
