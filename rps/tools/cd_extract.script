@@ -1,0 +1,20 @@
+#!/bin/bash
+
+#1. CD einlesen
+mkdir DDD
+cd DDD
+cdparanoia -B
+
+
+#2. mp3 erzeugen
+mlame -o "--vbr-new -h" *.wav
+cd ..
+
+#3. Titel aus Datenbank holen
+disc-cover -D /dev/sr0 -t txt -o - > temp.txt
+less temp.txt
+
+#4 Titel ersetzen
+DIR=`pwd`"/DDD"
+$HOME/rollenspiel/rps/tools/cd_titel -d`pwd`"/DDD/ -ttemp.txt
+rm temp.txt
