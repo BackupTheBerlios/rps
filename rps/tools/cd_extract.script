@@ -3,6 +3,7 @@
 #1. CD einlesen
 function read_cd()
 {
+   rm -r DDD
    mkdir DDD
    cd DDD
    nice -20 cdparanoia -B
