@@ -5,7 +5,7 @@
 #include <iostream>
 void Soundfile::play(const std::string &mainpath,const bool repeatbool)
 {
-   std::string file = mainpath+"/"+path+"/"+name+stype;
+   std::string file = mainpath+Filename();
 
    int fd[2];
    if (pipe(fd)) { perror("pipe"); return; }

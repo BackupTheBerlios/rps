@@ -175,12 +175,14 @@ bin_PROGRAMS = rps
 rps_SOURCES = \
 	rpgs.cc\
 	main_window_RPS_glade.cc \
-	main_window_RPS.cc 
+	main_window_RPS.cc \
+   sound_widget.cc
 
 
 noinst_HEADERS = \
 	main_window_RPS_glade.hh \
-	main_window_RPS.hh 
+	main_window_RPS.hh \
+   sound_widget.hh
 
 
 AM_CXXFLAGS = -I/usr/include/gtkmm-2.0 -I/usr/lib/gtkmm-2.0/include -I/usr/include/gtk-2.0 -I/usr/lib/sigc++-1.2/include -I/usr/include/sigc++-1.2 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/lib/gtk-2.0/include -I/usr/include/pango-1.0 -I/usr/include/freetype2 -I/usr/X11R6/include -I/usr/include/atk-1.0   \
@@ -199,7 +201,7 @@ bin_PROGRAMS = rps$(EXEEXT)
 PROGRAMS = $(bin_PROGRAMS)
 
 am_rps_OBJECTS = rpgs.$(OBJEXT) main_window_RPS_glade.$(OBJEXT) \
-	main_window_RPS.$(OBJEXT)
+	main_window_RPS.$(OBJEXT) sound_widget.$(OBJEXT)
 rps_OBJECTS = $(am_rps_OBJECTS)
 rps_DEPENDENCIES =
 rps_LDFLAGS =
@@ -209,7 +211,7 @@ depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
 DEP_FILES = ./$(DEPDIR)/main_window_RPS.Po \
 	./$(DEPDIR)/main_window_RPS_glade.Po \
-	./$(DEPDIR)/rpgs.Po
+	./$(DEPDIR)/rpgs.Po ./$(DEPDIR)/sound_widget.Po
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 LTCXXCOMPILE = $(LIBTOOL) --mode=compile $(CXX) $(DEFS) \
@@ -275,6 +277,7 @@ distclean-compile:
 include ./$(DEPDIR)/main_window_RPS.Po
 include ./$(DEPDIR)/main_window_RPS_glade.Po
 include ./$(DEPDIR)/rpgs.Po
+include ./$(DEPDIR)/sound_widget.Po
 
 .cc.o:
 	if $(CXXCOMPILE) -MT $@ -MD -MP -MF "$(DEPDIR)/$*.Tpo" \

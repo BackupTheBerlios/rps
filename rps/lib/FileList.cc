@@ -56,33 +56,26 @@ void FileList::get_file_info()
       std::cout << i->first<<'\n';
       for(std::vector<Soundfile>::iterator j=i->second.begin();j!=i->second.end();++j)
        {
-         std::string cmd="qmp3info -s "+mainpath+"/"+j->Path()+"/"+j->Name()+"."+j->TypeStr();
+         std::string cmd="qmp3info -s "+mainpath+j->Filename();
 
-//         system(cmd.c_str());
-
-           char buf[100];
-           FILE *ptr;
-           std::string time,minu,sec;
-           if ((ptr = popen(cmd.c_str(), "r")) != NULL)
-           while (fgets(buf, BUFSIZ, ptr) != NULL)
-            {
-              time=buf;
-              if(time.find_last_of("=>")!=std::string::npos && 
-                 time.find_last_of(":")!=std::string::npos  &&
-                 time.find_last_of("\n")!=std::string::npos)
-               {
-                 minu=time.substr(time.find_last_of("=>")+1,time.find(":")-time.find_last_of("=>")-1);
-                 sec=time.substr(time.find(":")+1,time.find("\n")-time.find(":")-1);
-                 j->setTime(minu+":"+sec,atoi(minu.c_str()),atoi(sec.c_str()));
-//std::cout <<time<<"#"<< minu<<":"<<sec<<"#\n";
-//exit(1);
+         char buf[100];
+         FILE *ptr;
+         std::string time,minu,sec;
+         if ((ptr = popen(cmd.c_str(), "r")) != NULL)
+         while (fgets(buf, BUFSIZ, ptr) != NULL)
+           {
+             time=buf;
+             if(time.find_last_of("=>")!=std::string::npos && 
+                time.find_last_of(":")!=std::string::npos  &&
+                time.find_last_of("\n")!=std::string::npos)
+              {
+                minu=time.substr(time.find_last_of("=>")+1,time.find(":")-time.find_last_of("=>")-1);
+                sec=time.substr(time.find(":")+1,time.find("\n")-time.find(":")-1);
+                j->setTime(minu+":"+sec,atoi(minu.c_str()),atoi(sec.c_str()));
                }
             }
            pclose(ptr);
-           std::cout << "   "<<j->Path()<<'\t'<<j->Name()<<' '<<j->TypeStr()
-                   <<' '<<j->Time()<<'\n';
+           std::cout << "   "<<j->Filename()<<' '<<j->Time()<<'\n';
        }
     }
 }
-
-

@@ -15,11 +15,13 @@ bin_PROGRAMS = rps
 rps_SOURCES = \
 	rpgs.cc\
 	main_window_RPS_glade.cc \
-	main_window_RPS.cc 
+	main_window_RPS.cc \
+   sound_widget.cc
 
 noinst_HEADERS = \
 	main_window_RPS_glade.hh \
-	main_window_RPS.hh 
+	main_window_RPS.hh \
+   sound_widget.hh
 
 AM_CXXFLAGS = @GTKMM_CFLAGS@ \
               -I../lib/ \

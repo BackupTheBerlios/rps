@@ -27,6 +27,7 @@ class SoundfileBase
             {time=t; minutes=m; seconds=s;}
       const std::string &Time() const {return time;}
       
+      std::string Filename() const { return "/"+Path()+"/"+Name()+"."+TypeStr();}
       const std::string &Name() const {return name;}
       const std::string &Path() const {return path;}
       etype Type() const {return type;}
