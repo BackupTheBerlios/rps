@@ -59,6 +59,8 @@ class main_window_RPS : public main_window_RPS_glade
         RPS &getRPS() {return rpgs;}
 
    private:
+       bool on_main_window_RPS_delete_event(GdkEventAny *ev);
+
 #if 1
 #if 0
         bool on_eventbox_key_release_event(GdkEventKey *ev);

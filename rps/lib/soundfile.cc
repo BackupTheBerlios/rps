@@ -134,6 +134,22 @@ void SoundfileBase::setTime(const int m, const int s)
 }
 
 
+void SoundfileBase::setTime(const std::string &_time) 
+{
+   if(_time.find_last_of("=>")!=std::string::npos && 
+      _time.find_last_of(":")!=std::string::npos  &&
+      _time.find_last_of("\n")!=std::string::npos)
+     {
+       std::string smin=_time.substr(_time.find_last_of("=>")+1,_time.find(":")-_time.find_last_of("=>")-1);
+       std::string ssec=_time.substr(_time.find(":")+1,_time.find("\n")-_time.find(":")-1);
+       int min = atoi(smin.c_str());
+       int sec = atoi(ssec.c_str());
+       setTime(min,sec);
+     }
+}
+
+
+
 std::string SoundfileBase::TypeStr() const
 {
    if(type==None) return "unkown";

@@ -25,6 +25,7 @@ class SoundfileBase
             { set_type(name); }
 
       void setTime(const int m, const int s) ;
+      void setTime(const std::string &_time) ;
       const std::string &Time() const {return time;}
       
       std::string Filename() const { return "/"+Path()+"/"+Name()+"."+TypeStr();}

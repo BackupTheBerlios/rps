@@ -112,7 +112,15 @@ void main_window_RPS::on_button_quit_clicked()
 main_window_RPS::~main_window_RPS()
 {
    rpgs.stop_playing();
+//    rpgs.getFileList().save_cache();
 }
+
+bool main_window_RPS::on_main_window_RPS_delete_event(GdkEventAny *ev)
+{  
+   std::cout << "delete event\n";
+   return false;
+}
+
 
 bool main_window_RPS::on_treeview_main_button_release_event(GdkEventButton *ev)
 {  
@@ -182,19 +190,3 @@ void main_window_RPS::on_togglebutton_kill_on_new_toggled()
 }
 
 
-#if 0
-void main_window_RPS::on_treeview_playlist_row_activated(const Gtk::TreeModel::Path& path, Gtk::TreeViewColumn* column)
-{  
-   if(treeview_main->row_expanded(path))
-      treeview_main->collapse_row(path);
-   else treeview_main->expand_row(path,true);
-   playlist_entry_selected();   
-}
-
-bool main_window_RPS::on_treeview_playlist_button_release_event(GdkEventButton *ev)
-{  
-   playlist_entry_selected();
-   return 0;
-}
-
-#endif

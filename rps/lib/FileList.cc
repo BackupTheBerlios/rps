@@ -7,7 +7,7 @@
 FileList::FileList(const std::string &s)
 : mainpath(s) 
 {
-   load_cache();
+   FLC.load_cache();
    looking_for_subpaths();
    read_subdirs();
    get_file_info();
@@ -59,25 +59,30 @@ void FileList::get_file_info()
        {
          std::string cmd="qmp3info -s "+mainpath+j->Filename();
 
-         char buf[100];
-         FILE *ptr;
-         if ((ptr = popen(cmd.c_str(), "r")) != NULL)
-         while (fgets(buf, BUFSIZ, ptr) != NULL)
-           {
-             std::string time=buf;
-             if(time.find_last_of("=>")!=std::string::npos && 
-                time.find_last_of(":")!=std::string::npos  &&
-                time.find_last_of("\n")!=std::string::npos)
+         bool found_in_cache ; 
+         const std::map<std::string,FileListCache::st_cache>::const_iterator ci
+                                 = FLC.getCache().find(j->Filename());
+         if(FLC.getCache().end()==ci)
+               found_in_cache=false;
+         else  found_in_cache=true;
+
+         if (found_in_cache)
+          {
+             j->setTime(ci->second.time);
+          }
+         else
+          {
+            char buf[100];
+            FILE *ptr;
+            if ((ptr = popen(cmd.c_str(), "r")) != NULL)
+            while (fgets(buf, BUFSIZ, ptr) != NULL)
               {
-                std::string smin=time.substr(time.find_last_of("=>")+1,time.find(":")-time.find_last_of("=>")-1);
-                std::string ssec=time.substr(time.find(":")+1,time.find("\n")-time.find(":")-1);
-                int min = atoi(smin.c_str());
-                int sec = atoi(ssec.c_str());
-                j->setTime(min,sec);
+                std::string time=buf;
+                j->setTime(time);
                }
-            }
-           pclose(ptr);
-           std::cout << "   "<<j->Filename()<<' '<<j->Time()<<'\n';
+            pclose(ptr);
+          }
+         std::cout << "   "<<j->Filename()<<' '<<j->Time()<<'\n';
        }
     }
 }
@@ -101,31 +106,44 @@ void FileList::save_cache() const
     }
 }
 
-void FileList::load_cache() 
+//////////////////////////////////////////////////////////////////////////
+
+void FileListCache::load_cache() 
 {
    std::string sname=getenv("HOME")+std::string("/.rps.cache");
    std::ifstream fi(sname.c_str());
    if(!fi.good()) { std::cout << sname <<" not found\n";
              return; }
    std::cout << "Loading "<<sname<<'\n';
+
+   std::vector<std::string> FC;
+   FC.push_back("Name:((");
+   FC.push_back("Length:((");
+   FC.push_back("Volume:((");
+   std::string E = "))";
+
    while(true)
     {
       std::string line;
       std::getline(fi,line);
       if(!fi.good()) break;
-std::cout << line<<'\n';
-    }
-
-#if 0
-   for(t_filemap::const_iterator i=filemap.begin();i!=filemap.end();++i)
-    {
-      for(std::vector<Soundfile>::const_iterator j=i->second.begin();j!=i->second.end();++j)
+      std::vector<std::string> VR;
+      for(std::vector<std::string>::const_iterator i=FC.begin();i!=FC.end();++i)
        {
-         fo << "Name:(("  <<j->Filename()<<"))\t"
-            << "Length:(("<<j->Time()<<"))\t"
-            << "Volume:(("<<j->DefaultVolume()<<"))\n";
-       }   
+         std::string::size_type _a = line.find(*i);
+         if(_a==std::string::npos)
+           {
+            std::cerr << "Strange line in cache-file while looking for "
+                      << *i<<"\n\t"<<line<<'\n';
+           }
+         std::string::size_type _e = line.find(E); 
+         std::string result=line.substr(_a+i->size(),_e-(_a+i->size()));
+         line=line.substr(_e+E.size(),std::string::npos);      
+//std::cout << _e<<"#"<<line<<"#\t#"<<result<<"#\n";
+         VR.push_back(result);
+      }
+//std::cout << VR[0]<<'\t'<<VR[1]<<'\t'<<VR[2]<<'\n';
+     CM[VR[0]] = st_cache(VR[1],atoi(VR[2].c_str()));
     }
-#endif
 }
 
