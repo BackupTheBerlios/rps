@@ -36,11 +36,10 @@ class main_window_RPS : public main_window_RPS_glade
 
            Gtk::TreeModelColumn<std::string> col_name;
            Gtk::TreeModelColumn<std::string> col_time;
-//           Gtk::TreeModelColumn<int>         colI1;
            Gtk::TreeModelColumn<Soundfile> sound;
-//           Gtk::TreeModelColumn<bool> is_cd;
+           Gtk::TreeModelColumn<bool> is_cd;
 
-           ModelColumnsSound() { add(col_name); add(col_time); add(sound); }
+           ModelColumnsSound() { add(col_name); add(col_time); add(sound); add(is_cd);}
 
           };
         ModelColumnsSound m_ColumnsSound;
@@ -51,6 +50,7 @@ class main_window_RPS : public main_window_RPS_glade
         void fill_playlist();
         void entry_selected() ;
         void signal_playlist_cachanged() {fill_playlist();}
+        void start_CD() const;
 
         std::vector<Soundfile> cd;
    public:
@@ -73,6 +73,8 @@ class main_window_RPS : public main_window_RPS_glade
         void on_treeview_main_row_activated(const Gtk::TreeModel::Path& path, Gtk::TreeViewColumn* column);
         void on_treeview_main_cursor_changed();
         bool on_treeview_main_button_release_event(GdkEventButton *ev);
+        void on_treeview_main_row_expanded(const Gtk::TreeModel::iterator& iter, const Gtk::TreeModel::Path& path);
+
 
         bool on_treeview_main_move_cursor(Gtk::MovementStep step, int count);
         void on_treeview_main_select_cursor_row(bool start_editing);

@@ -30,7 +30,7 @@ main_window_RPS::main_window_RPS(const std::string &m)
    togglebutton_kill_on_new->set_active(rpgs.getKillOnNew());
    togglebutton_play_dir->set_active(true);
    
-   get_window()->move(10,80);
+   get_window()->move(50,80);
    set_size_request(800,700);
 }
 
@@ -78,14 +78,14 @@ void main_window_RPS::fill_columns()
       {
         Gtk::TreeModel::Row row = *(m_refTreeModelSelect->append());
         row[m_ColumnsSound.col_name] = i->first.subpath;
-//        row[m_ColumnsSound.is_cd] = false;
+        row[m_ColumnsSound.is_cd] = false;
         fill_soundfiles(i->second,row);
       }
      else 
       {
         Gtk::TreeModel::Row row = *(m_refTreeModelSelect->append(cd_row.children()));
         row[m_ColumnsSound.col_name] = i->first.subpath;
-//        row[m_ColumnsSound.is_cd] = true;
+        row[m_ColumnsSound.is_cd] = true;
         fill_soundfiles(i->second,row);
       }
    }  
@@ -140,6 +140,7 @@ bool main_window_RPS::on_main_window_RPS_delete_event(GdkEventAny *ev)
 
 void main_window_RPS::on_togglebutton_play_dir_toggled()
 {
+#if 0
 std::cout << "ACI\n";
    Glib::RefPtr<Gtk::TreeSelection> sel = treeview_main->get_selection();
    Gtk::TreeModel::iterator iter = sel->get_selected();
@@ -150,6 +151,7 @@ std::cout << "ACI\n";
       std::string s2 = row[m_ColumnsSound.col_time];
 std::cout << s1 <<'\t'<<s2<<'\t'<<  '\n';
     }
+#endif
 }
 
 
@@ -167,21 +169,36 @@ void main_window_RPS::entry_selected()
    if(iter) //If anything is selected
     {
       Gtk::TreeModel::Row row = *iter;
-      std::string col1 = row[m_ColumnsSound.col_name];
-      std::string col2 = row[m_ColumnsSound.col_time];
       Soundfile s = row[m_ColumnsSound.sound];
-      bool playdir = togglebutton_play_dir->get_active();
-std::cout <<(col1=="CDs") <<' '<<!col2.empty()<<'\t'<<'\t'<<playdir<<'\n';
-      if(col1=="CDs" && !col2.empty() && togglebutton_play_dir->get_active())
-       {
-std::cout << "PLay "<< col2<<'\n';
-       }
       if(!s.Name().empty()) 
         {
          rpgs.play(s);
         }
     }
 }
+
+void main_window_RPS::start_CD() const
+{
+   if(!togglebutton_play_dir->get_active()) return;
+   Glib::RefPtr<Gtk::TreeSelection> sel = treeview_main->get_selection();
+   Gtk::TreeModel::iterator iter = sel->get_selected();
+   if(iter) //If anything is selected
+    {
+      Gtk::TreeModel::Row row = *iter;
+      bool is_cd = row[m_ColumnsSound.is_cd];
+      if(!is_cd) return;
+      std::string col = row[m_ColumnsSound.col_name];
+std::cout << "PLay "<< col<<'\n';
+    }
+}
+
+void main_window_RPS::on_treeview_main_row_expanded(const Gtk::TreeModel::iterator& iter, const Gtk::TreeModel::Path& path)
+{
+   std::cout << "expanded\n";
+   start_CD();
+}
+
+
 
 void main_window_RPS::on_treeview_main_row_activated(const Gtk::TreeModel::Path& path, Gtk::TreeViewColumn* column)
 {  
