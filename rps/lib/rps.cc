@@ -1,4 +1,5 @@
 #include <rps.hh>
+#include <Play.hh>
 
 #include <iostream>
 
@@ -80,9 +81,8 @@ void RPS::play(const std::string &cd)
 {
    if(kill_on_new) stop_playing();
    std::vector<Soundfile> SL=filelist.get_cd_file_list(cd);
-std::cout << "Play size="<<SL.size()<<'\n';
+   Play P(SL);
 }
-
 
 
 void RPS::remove_from_playlist(const int pid) 

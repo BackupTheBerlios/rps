@@ -5,6 +5,16 @@ Play::Play(const Soundfile &S,const bool repeat)
    play(S.Filename(),repeat);
 }
 
+Play::Play(const std::vector<Soundfile> &S)
+{
+   std::string ss;
+   for(std::vector<Soundfile>::const_iterator i=S.begin();i!=S.end();++i)
+      ss+= i->Filename() +" ";
+   play(ss,false);
+}
+
+
+
 
 void Play::play(const std::string &file,const bool repeat)
 {
