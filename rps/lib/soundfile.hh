@@ -15,12 +15,13 @@ class SoundfileBase
       std::string name,stype,path,text,time;
       etype type;
       int minutes, seconds;
+      int default_volume;
 
       void set_type(const std::string &n);
    public:
-      SoundfileBase() : type(None),minutes(0),seconds(0) {}
+      SoundfileBase() : type(None),minutes(0),seconds(0),default_volume(100) {}
       SoundfileBase(const std::string &p,const std::string &n)
-         : path(p),name(n),type(None),minutes(0),seconds(0) 
+         : path(p),name(n),type(None),minutes(0),seconds(0),default_volume(100) 
             { set_type(name); }
 
       void setTime(const std::string t,const int m, const int s) 
@@ -32,6 +33,7 @@ class SoundfileBase
       const std::string &Path() const {return path;}
       etype Type() const {return type;}
       std::string TypeStr() const;
+      int DefaultVolume() const {return default_volume;}
 
       bool operator==(const SoundfileBase &b) const
             {return Name()==b.Name() && Type()==b.Type() &&

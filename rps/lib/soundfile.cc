@@ -72,6 +72,7 @@ gchar* Soundfile::prozent_to_asd(const int p)
 
 void Soundfile::set_volume(const int v)
 {
+   default_volume=v;
    Volume volume;
    volume_parse(&volume, prozent_to_asd(v));
    AsdConnection *asdcon = asd_connection_new(NULL) ;

@@ -79,3 +79,24 @@ void FileList::get_file_info()
        }
     }
 }
+
+#include <fstream>
+#include <stdlib.h>
+
+void FileList::save() const
+{
+   std::string sname=getenv("HOME")+std::string("/.rps.rc");
+   std::ofstream fo(sname.c_str());
+   std::cout << "Saving "<<sname<<'\n';
+   for(t_filemap::const_iterator i=filemap.begin();i!=filemap.end();++i)
+    {
+      for(std::vector<Soundfile>::const_iterator j=i->second.begin();j!=i->second.end();++j)
+       {
+std::cout << "Save "<<j->Filename()<<'\n';
+         fo << "Name:"  <<j->Filename()<<"\t"
+            << "Length:"<<j->Time()<<"\t"
+            << "Volume:"<<j->DefaultVolume()<<'\n';
+       }   
+    }
+}
+

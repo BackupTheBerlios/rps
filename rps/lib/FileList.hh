@@ -28,5 +28,5 @@ class FileList
       iterator end()   { return filemap.end();   }
       int size() const { return filemap.size();  }
 
-
+      void save() const;
 };
