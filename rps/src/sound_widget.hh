@@ -3,7 +3,9 @@
 
 class sound_widget : public Gtk::VBox
 {
-      void value_changed(Gtk::Adjustment *a,const Soundfile &s);
+      void value_changed(Gtk::Adjustment *a,Soundfile &s);
+      void button_pressed(Soundfile &s);
+      void button_pressed_();
    public:
-      sound_widget(const Soundfile &s);
+      sound_widget(Soundfile &s);
 };
