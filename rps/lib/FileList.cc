@@ -68,6 +68,7 @@ void FileList::get_file_info()
 
          if (found_in_cache)
           {
+std::cout << "cached time ="<<ci->second.time<<'\n';
              j->setTime(ci->second.time);
           }
          else
