@@ -111,6 +111,7 @@ void RPS::play(Soundfile &s)
 void RPS::play(const std::string &cd) 
 {
    PSL=filelist.get_cd_file_list(cd);
+   if(PSL.empty()) return;
    play(PSL.front());
    PSL.pop_front();
 }
@@ -172,6 +173,7 @@ void RPS::load_conf(std::vector<std::string> &path) const
        std::string line;
        std::getline(fi,line);
        if(!fi.good()) break; 
+//std::cout << "Found path "<<line<<'\n';
        std::string::size_type _a = line.find(search_string);
        if(_a!=std::string::npos) 
          path.push_back(line.substr(search_string.size(),std::string::npos));

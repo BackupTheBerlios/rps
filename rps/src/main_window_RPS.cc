@@ -72,6 +72,10 @@ void main_window_RPS::fill_columns_recursive(const int level,
      if(i->first.sub_level == level) 
       {
         if( !parentpath.empty() && parentpath!=i->first.subpath ) continue;
+        if(prow!=NULL)
+         {  GtkTreeIter *g=prow->gobj();
+            if(g->user_data == NULL) continue;
+         }
 
         if(prow==NULL) row = *(m_refTreeModelSelect->append()); 
         else row = *(m_refTreeModelSelect->append(prow->children()));
@@ -86,6 +90,9 @@ void main_window_RPS::fill_columns_recursive(const int level,
       }
      else if(i->first.sub_level == level+1)
       {
+        if(!i->second.empty())
+            if( i->second.begin()->Path().find(parentpath) == std::string::npos)
+               continue;      
        fill_columns_recursive(level+1,&row,i->first.subpath);       
       }
    }
