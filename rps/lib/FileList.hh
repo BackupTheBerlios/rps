@@ -13,9 +13,11 @@ class FileList
       void looking_for_subpaths();
       void read_subdirs();
       void get_file_info();
+      void load_cache();
    public:
       FileList() {}
       FileList(const std::string &s);
+      ~FileList() {save_cache();}
 
       const std::string MainPath() const {return mainpath;}
 //      const t_filemap &Filemap()const{return filemap;}
@@ -28,5 +30,5 @@ class FileList
       iterator end()   { return filemap.end();   }
       int size() const { return filemap.size();  }
 
-      void save() const;
+      void save_cache() const;
 };

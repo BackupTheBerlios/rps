@@ -7,6 +7,7 @@
 FileList::FileList(const std::string &s)
 : mainpath(s) 
 {
+   load_cache();
    looking_for_subpaths();
    read_subdirs();
    get_file_info();
@@ -72,7 +73,6 @@ void FileList::get_file_info()
                 std::string ssec=time.substr(time.find(":")+1,time.find("\n")-time.find(":")-1);
                 int min = atoi(smin.c_str());
                 int sec = atoi(ssec.c_str());
-
                 j->setTime(min,sec);
                }
             }
@@ -85,20 +85,47 @@ void FileList::get_file_info()
 #include <fstream>
 #include <stdlib.h>
 
-void FileList::save() const
+void FileList::save_cache() const
 {
-   std::string sname=getenv("HOME")+std::string("/.rps.rc");
+   std::string sname=getenv("HOME")+std::string("/.rps.cache");
    std::ofstream fo(sname.c_str());
    std::cout << "Saving "<<sname<<'\n';
    for(t_filemap::const_iterator i=filemap.begin();i!=filemap.end();++i)
     {
       for(std::vector<Soundfile>::const_iterator j=i->second.begin();j!=i->second.end();++j)
        {
-std::cout << "Save "<<j->Filename()<<'\n';
-         fo << "Name:"  <<j->Filename()<<"\t"
-            << "Length:"<<j->Time()<<"\t"
-            << "Volume:"<<j->DefaultVolume()<<'\n';
+         fo << "Name:(("  <<j->Filename()<<"))\t"
+            << "Length:(("<<j->Time()<<"))\t"
+            << "Volume:(("<<j->DefaultVolume()<<"))\n";
        }   
     }
+}
+
+void FileList::load_cache() 
+{
+   std::string sname=getenv("HOME")+std::string("/.rps.cache");
+   std::ifstream fi(sname.c_str());
+   if(!fi.good()) { std::cout << sname <<" not found\n";
+             return; }
+   std::cout << "Loading "<<sname<<'\n';
+   while(true)
+    {
+      std::string line;
+      std::getline(fi,line);
+      if(!fi.good()) break;
+std::cout << line<<'\n';
+    }
+
+#if 0
+   for(t_filemap::const_iterator i=filemap.begin();i!=filemap.end();++i)
+    {
+      for(std::vector<Soundfile>::const_iterator j=i->second.begin();j!=i->second.end();++j)
+       {
+         fo << "Name:(("  <<j->Filename()<<"))\t"
+            << "Length:(("<<j->Time()<<"))\t"
+            << "Volume:(("<<j->DefaultVolume()<<"))\n";
+       }   
+    }
+#endif
 }
 
