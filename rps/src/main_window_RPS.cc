@@ -32,15 +32,18 @@ main_window_RPS::main_window_RPS(const std::string &m)
 }
 
 
-
-
 void main_window_RPS::signalhandler(int signr)
 {
   if ( signr== SIGCHLD )
     { int result;
       int pid = wait(&result);
-//std::cout << "Signalhandler: remove  "<<pid<<"\t"<<result<<'\n';
-      self->rpgs.remove_from_playlist(pid,false);
+#if 0
+std::cout << "Signalhandler: remove  "<<pid<<"\t"<<result<<'\n';
+std::cout << "  "<<WIFEXITED(result)<<' '<<WEXITSTATUS(result)<<' '
+          << WIFSIGNALED(result)<<' '<<WTERMSIG(result)<<' '
+          << WIFSTOPPED(result)<< ' '<<WSTOPSIG(result)<<'\n';
+#endif
+      if(WIFEXITED(result)) self->rpgs.remove_from_playlist(pid);
     }
 //  signal(SIGCHLD,&signalhandler);
 }
@@ -59,29 +62,26 @@ void main_window_RPS::fill_columns()
 {
   //Create the Tree model: 
   treeview_main->remove_all_columns();
-  m_refTreeModelSelect = Gtk::TreeStore::create(m_ColumnsSelect);
+  m_refTreeModelSelect = Gtk::TreeStore::create(m_ColumnsSound);
   treeview_main->set_model(m_refTreeModelSelect);
   treeview_main->columns_autosize();
 
   //Fill the TreeView's model
-  for(RPGS::t_filemap::const_iterator i=rpgs.Filemap().begin();i!=rpgs.Filemap().end();++i)
+  for(FileList::const_iterator i=rpgs.getFileList().begin();i!=rpgs.getFileList().end();++i)
    {
      Gtk::TreeModel::Row row = *(m_refTreeModelSelect->append());
-     row[m_ColumnsSelect.path] = i->first;
-     for(std::vector<soundfile>::const_iterator j=i->second.begin();j!=i->second.end();++j)
+     row[m_ColumnsSound.col1] = i->first;
+     for(std::vector<Soundfile>::const_iterator j=i->second.begin();j!=i->second.end();++j)
       {
         Gtk::TreeModel::Row childrow = *(m_refTreeModelSelect->append(row.children()));
-        childrow[m_ColumnsSelect.path] = i->first;
-        childrow[m_ColumnsSelect.file] = j->Name();
-//        childrow[m_ColumnsSelect.is_played] = j->IsPlayedStr();
-//        childrow[m_ColumnsSelect.is_played] = j->Played();
-        childrow[m_ColumnsSelect.sound] = *j;
+        childrow[m_ColumnsSound.col1] = i->first;
+        childrow[m_ColumnsSound.col2] = j->Name();
+        childrow[m_ColumnsSound.sound] = *j;
       }
    }  
   //Add the TreeView's view columns:
-  treeview_main->append_column("Path", m_ColumnsSelect.path);
-  treeview_main->append_column("Soundfile", m_ColumnsSelect.file);
-//  treeview_main->append_column("plays", m_ColumnsSelect.is_played);
+  treeview_main->append_column("Path", m_ColumnsSound.col1);
+  treeview_main->append_column("Soundfile", m_ColumnsSound.col2);
   treeview_main->queue_resize();
   treeview_main->set_enable_search(true);
   treeview_main->grab_focus();
@@ -89,21 +89,21 @@ void main_window_RPS::fill_columns()
 
 void main_window_RPS::fill_playlist()
 {
-//std::cout << "Fill\n";
+//std::cout << "Fill playlist\n";
   treeview_playlist->remove_all_columns();
-  m_refTreeModelPlayList = Gtk::TreeStore::create(m_ColumnsPlay);
+  m_refTreeModelPlayList = Gtk::TreeStore::create(m_ColumnsSound);
   treeview_playlist->set_model(m_refTreeModelPlayList);
   //Fill the TreeView's model
   for(PlayList::const_iterator i=rpgs.getPlayList().begin();i!=rpgs.getPlayList().end();++i)
    {
      Gtk::TreeModel::Row row = *(m_refTreeModelPlayList->append());
-     row[m_ColumnsPlay.repeat] = i->RepeatStr();
-     row[m_ColumnsPlay.sound] = i->sound;
-     row[m_ColumnsPlay.st_pl] = *i;
+     row[m_ColumnsSound.col1] = i->RepeatStr();
+     row[m_ColumnsSound.col2] = i->Name();
+     row[m_ColumnsSound.sound] = *i;
    }  
   //Add the TreeView's view columns:
-  treeview_playlist->append_column("Rep.", m_ColumnsPlay.repeat);
-  treeview_playlist->append_column("Sound", m_ColumnsPlay.sound);
+  treeview_playlist->append_column("Rep.", m_ColumnsSound.col1);
+  treeview_playlist->append_column("Sound", m_ColumnsSound.col2);
 }                    
 
 void main_window_RPS::on_button_quit_clicked() 
@@ -130,7 +130,7 @@ void main_window_RPS::entry_selected()
    if(iter) //If anything is selected
     {
       Gtk::TreeModel::Row row = *iter;
-      soundfile s = row[m_ColumnsSelect.sound];
+      Soundfile s = row[m_ColumnsSound.sound];
 //std::cout <<'\t'<< "\tSound: "<<s.Name()<<' '<<s.TypeStr()<<'\n';
       if(!s.Name().empty()) 
         {
@@ -147,8 +147,8 @@ void main_window_RPS::playlist_entry_selected()
    if(iter) //If anything is selected
     {
       Gtk::TreeModel::Row row = *iter;
-      PlayList::st_playlist s = row[m_ColumnsPlay.st_pl];
-      rpgs.remove_from_playlist(s.mpgpid,true);
+      Soundfile s = row[m_ColumnsSound.sound];
+      rpgs.remove_from_playlist(s,true);
     }
 }
 

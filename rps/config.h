@@ -11,6 +11,7 @@
  * These entries are sometimes used by macros
  * which glade-- uses.
  */
+#define ASDSUPPORT 1
 #define PACKAGE "rpgs"
 #define VERSION "0.0"
 #define ENABLE_NLS 1
@@ -21,6 +22,9 @@
 /* #undef HAVE_LIBSM */
 #define PACKAGE_LOCALE_DIR "/usr/local/share/locale"
 #define GETTEXT_PACKAGE "rpgs"
+
+/* " with asd support " */
+#define ASDSUPPORT 1
 
 /* Define to one of `_getb67', `GETB67', `getb67' for Cray-2 and Cray-YMP
    systems. This function is required for `alloca.c' support on those systems.

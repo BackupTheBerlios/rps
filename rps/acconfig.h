@@ -9,6 +9,7 @@
  * These entries are sometimes used by macros
  * which glade-- uses.
  */
+#undef ASDSUPPORT
 #undef PACKAGE
 #undef VERSION
 #undef ENABLE_NLS

@@ -14,6 +14,12 @@
 
 
 
+# generated 2003/9/22 11:37:15 CEST by thoma@Tiger.(none)
+# using glademm V2.0.0b
+#
+# newer (non customized) versions of this file go to Makefile.am_new
+#ASD_DIR=/usr/src/asd4-0.2/
+
 srcdir = .
 top_srcdir = ..
 
@@ -164,12 +170,6 @@ sharedstatedir = ${prefix}/com
 sysconfdir = ${prefix}/etc
 target_alias = 
 
-# generated 2003/9/22 11:37:15 CEST by thoma@Tiger.(none)
-# using glademm V2.0.0b
-#
-# newer (non customized) versions of this file go to Makefile.am_new
-ASD_DIR = /usr/src/asd4-0.2/
-
 bin_PROGRAMS = rps
 
 rps_SOURCES = \
@@ -184,6 +184,7 @@ noinst_HEADERS = \
 
 
 AM_CXXFLAGS = -I/usr/include/gtkmm-2.0 -I/usr/lib/gtkmm-2.0/include -I/usr/include/gtk-2.0 -I/usr/lib/sigc++-1.2/include -I/usr/include/sigc++-1.2 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/lib/gtk-2.0/include -I/usr/include/pango-1.0 -I/usr/include/freetype2 -I/usr/X11R6/include -I/usr/include/atk-1.0   \
+              -I../lib/ \
               -I${ASD_DIR}asdlib/ \
               -I${ASD_DIR}common/
 

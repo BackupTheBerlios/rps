@@ -44,6 +44,7 @@ PKG_CHECK_MODULES(GTKMM,[gtkmm-2.0 >= 2.2.7])
 AC_SUBST(GTKMM_CFLAGS)
 AC_SUBST(GTKMM_LIBS)
 
-AC_ASD_DIR="/usr/src/asd4-0.2/"
+AC_DEFINE(ASDSUPPORT,1,"[ with asd support ]")
+AC_INCLUDES="-I/usr/src/asd4-0.2/"
 
 AC_OUTPUT(Makefile lib/Makefile src/Makefile )

@@ -6,7 +6,7 @@ AM_CXXFLAGS = -I${ASD_DIR}asdlib/ \
               `glib-config --cflags glib gthread`
 
 lib_LIBRARIES=libRPGS.a
-libRPGS_a_SOURCES = rpgs.cc
+libRPGS_a_SOURCES = soundfile.cc FileList.cc PlayList.cc rps.cc 
 
 ###########################
 #AM_CXXFLAGS=" -O0 -g "

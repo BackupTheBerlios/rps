@@ -17,48 +17,31 @@
 
 #include <gtkmm/treestore.h>
 #include <signal.h>
-#include "../lib/rpgs.hh"
-
+#include <rps.hh>
 
 class main_window_RPS : public main_window_RPS_glade
 {  
         
    private:
-        bool block_fill_playlist;
-        RPGS rpgs;
+//        bool block_fill_playlist;
+        RPS rpgs;
 
         static void signalhandler(int signr);
         static main_window_RPS *self;
 
         //Tree model columns:
-        class ModelColumnsSelect : public Gtk::TreeModel::ColumnRecord
+        class ModelColumnsSound : public Gtk::TreeModel::ColumnRecord
          {
            public:
 
-           Gtk::TreeModelColumn<std::string> path;
-           Gtk::TreeModelColumn<std::string> file;
-#if 0
-           Gtk::TreeModelColumn<std::string> is_played;
-           Gtk::TreeModelColumn<bool> is_played;
-#endif
-           Gtk::TreeModelColumn<soundfile> sound;
+           Gtk::TreeModelColumn<std::string> col1;
+           Gtk::TreeModelColumn<std::string> col2;
+           Gtk::TreeModelColumn<Soundfile> sound;
 
-//           ModelColumnsSelect() { add(path); add(file); add(is_played); add(sound); }
-           ModelColumnsSelect() { add(path); add(file); add(sound); }
+           ModelColumnsSound() { add(col1); add(col2); add(sound); }
+
           };
-        class ModelColumnsPlay : public Gtk::TreeModel::ColumnRecord
-         {
-           public:
-
-           Gtk::TreeModelColumn<std::string> repeat;
-           Gtk::TreeModelColumn<std::string> sound;
-           Gtk::TreeModelColumn<PlayList::st_playlist> st_pl;
-
-           ModelColumnsPlay() { add(repeat); add(sound); add(st_pl); }
-          };
-
-        ModelColumnsSelect m_ColumnsSelect;
-        ModelColumnsPlay m_ColumnsPlay;
+        ModelColumnsSound m_ColumnsSound;
         Glib::RefPtr<Gtk::TreeStore> m_refTreeModelSelect;
         Glib::RefPtr<Gtk::TreeStore> m_refTreeModelPlayList;
 

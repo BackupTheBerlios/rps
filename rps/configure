@@ -23591,7 +23591,12 @@ echo "$as_me: error: Library requirements (gtkmm-2.0 >= 2.2.7) not met; consider
 
 
 
-AC_ASD_DIR="/usr/src/asd4-0.2/"
+
+cat >>confdefs.h <<\_ACEOF
+#define ASDSUPPORT 1
+_ACEOF
+
+AC_INCLUDES="-I/usr/src/asd4-0.2/"
 
                               ac_config_files="$ac_config_files Makefile lib/Makefile src/Makefile"
 cat >confcache <<\_ACEOF

@@ -1,6 +1,6 @@
-#include "rpgs.hh"
+#include "rps.hh"
 
 main()
 {
-   RPGS("/var/thoma/sound/testsound");   
+   RPS("/var/thoma/sound/testsound");   
 }
