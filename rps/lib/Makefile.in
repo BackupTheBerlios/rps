@@ -178,6 +178,7 @@ lib_LIBRARIES = libRPGS.a
 libRPGS_a_SOURCES = soundfile.cc \
                     FileList.cc \
                     PlayList.cc \
+                    Play.cc \
                     rps.cc \
                     asd_sound.cc \
                     itos.cc
@@ -204,8 +205,8 @@ LIBRARIES = $(lib_LIBRARIES)
 libRPGS_a_AR = $(AR) cru
 libRPGS_a_LIBADD =
 am_libRPGS_a_OBJECTS = soundfile.$(OBJEXT) FileList.$(OBJEXT) \
-	PlayList.$(OBJEXT) rps.$(OBJEXT) asd_sound.$(OBJEXT) \
-	itos.$(OBJEXT)
+	PlayList.$(OBJEXT) Play.$(OBJEXT) rps.$(OBJEXT) \
+	asd_sound.$(OBJEXT) itos.$(OBJEXT)
 libRPGS_a_OBJECTS = $(am_libRPGS_a_OBJECTS)
 bin_PROGRAMS = rpgs_test$(EXEEXT)
 PROGRAMS = $(bin_PROGRAMS)
@@ -218,10 +219,10 @@ rpgs_test_LDFLAGS =
 DEFAULT_INCLUDES =  -I. -I$(srcdir) -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
-@AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/FileList.Po ./$(DEPDIR)/PlayList.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/asd_sound.Po ./$(DEPDIR)/itos.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/rpgs_test.Po ./$(DEPDIR)/rps.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/soundfile.Po
+@AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/FileList.Po ./$(DEPDIR)/Play.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/PlayList.Po ./$(DEPDIR)/asd_sound.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/itos.Po ./$(DEPDIR)/rpgs_test.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/rps.Po ./$(DEPDIR)/soundfile.Po
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 LTCXXCOMPILE = $(LIBTOOL) --mode=compile $(CXX) $(DEFS) \
@@ -317,6 +318,7 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/FileList.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Play.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/PlayList.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/asd_sound.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/itos.Po@am__quote@

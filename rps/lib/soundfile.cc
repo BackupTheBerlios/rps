@@ -1,50 +1,18 @@
 #include <soundfile.hh>
 #include <unistd.h>
 #include <errno.h>
-//#include <itos.hh>
+#include <Play.hh>
 
 #include <iostream>
 void Soundfile::play(const std::string &mainpath,const bool repeatbool)
 {
-   std::string file = Filename();
-
-   int fd[2];
-   if (pipe(fd)) { perror("pipe"); return; }
-   if (!(mpgpid=fork()))
-    {close(fd[0]); 
-     dup2(fd[1],1);
-     close(fd[1]); 
-     execl("/usr/bin/mpg123",  "mpg123","-sq","-b10240",
-          repeatbool?"-Z":"-q",file.c_str(),0);
-     perror("/usr/bin/mpg123");
-     _exit(errno);
-    }
-   if (!(asdpid=fork()))
-    {close(fd[1]);
-     dup2(fd[0],0);
-     close(fd[0]); 
-     execl("/usr/bin/asdcat",  "asdcat",0);
-     perror("/usr/bin/asdcat");
-     _exit(errno);
-    }
-   close(fd[0]); close(fd[1]);
+   Play P(*this,repeatbool);
+   mpgpid = P.MpgPid(); 
+   asdpid = P.AsdPid();
    is_played=true;
    repeat=repeatbool;
-//   start_time=::time(NULL);
-
-//Gtk::Main::timeout.connect(slot(this,&Soundfile::timeout),10);
-
-//   timeout.connect(slot(&foo),10)
-//std::cout << " play "<<file<<'\t' << mpgpid<<'\t'<<asdpid<<'\t'<<repeat
-//   <<'\t'<<start_time<<'\n';
 }
 
-#if 0
-void Soundfile::timeout(const time_t start_time)
-{
-   std::cout << "Runtime: "<<   ::time(NULL)-start_time;
-}
-#endif
 void Soundfile::stop_playing()
 {
    is_played=false;

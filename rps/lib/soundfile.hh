@@ -54,10 +54,6 @@ class Soundfile : public SoundfileBase
       bool is_played, repeat;
       int mpgpid, asdpid;
 
-#if 0
-      time_t start_time;
-      void timeout(const time_t start_time);
-#endif
    public:
       Soundfile() : is_played(false),repeat(false),mpgpid(0),asdpid(0)/*,
                     start_time(0)*/ {}

@@ -9,6 +9,7 @@ lib_LIBRARIES=libRPGS.a
 libRPGS_a_SOURCES = soundfile.cc \
                     FileList.cc \
                     PlayList.cc \
+                    Play.cc \
                     rps.cc \
                     asd_sound.cc \
                     itos.cc
