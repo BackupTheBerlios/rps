@@ -32,7 +32,6 @@ function set_files()
    rm temp.txt
 }
 
-disc-cover -D /dev/sr0 -t txt -o -
 get_database
 read_cd
 encode

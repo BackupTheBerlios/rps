@@ -48,6 +48,7 @@ void remove_spaces(MS_t &MS)
    MR["-"]="_";
    MR["."]="_";
    MR["&"]="and";
+   MR["'"]="";
    for(MS_t::iterator i=MS.begin();i!=MS.end();++i)
     {
       for(std::map<std::string,std::string>::const_iterator j=MR.begin();j!=MR.end();++j)
@@ -74,9 +75,10 @@ std::string rename_dir(std::string dir,MS_t &MS)
    if(dir==new_dir) return new_dir;
    std::string com="mv "+dir+" "+new_dir;
 //   setenv("LANG","C",1);
-//std::cout << com<<'\n';
+std::cout << com<<'\n';
 //exit(1);
    system(com.c_str());
+
    
 //   int r=rename(dir.c_str(),new_dir.c_str());
 //   std::cout << "rename_dir:"<<r<<'\n';
