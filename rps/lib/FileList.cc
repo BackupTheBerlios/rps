@@ -74,13 +74,13 @@ void FileList::get_file_info()
           {
             std::vector<std::pair<std::string,std::string> > com;
             com.push_back(std::pair<std::string,std::string>
-               ("qmp3info -s "+j->Filename(),"=>"));
-            com.push_back(std::pair<std::string,std::string>
                ("checkmp3 "+j->Filename(),"SONG_LENGTH"));
+            com.push_back(std::pair<std::string,std::string>
+               ("qmp3info -s "+j->Filename(),"=>"));
             for(std::vector<std::pair<std::string,std::string> >::
                const_iterator i=com.begin();i!=com.end();++i)
              {
-               char buf[100];
+               char buf[1024];
                FILE *ptr;
                if ((ptr = popen(i->first.c_str(), "r")) != NULL)
                while (fgets(buf, BUFSIZ, ptr) != NULL)
@@ -159,20 +159,25 @@ void FileListCache::load()
       std::vector<std::string> VR;
       for(std::vector<std::string>::const_iterator i=FC.begin();i!=FC.end();++i)
        {
+         std::string result;
          std::string::size_type _a = line.find(*i);
          if(_a==std::string::npos)
            {
             std::cerr << "Strange line in cache-file while looking for "
                       << *i<<"\n\t"<<line<<'\n';
+            result="";
            }
-         std::string::size_type _e = line.find(E); 
-         std::string result=line.substr(_a+i->size(),_e-(_a+i->size()));
-         line=line.substr(_e+E.size(),std::string::npos);      
-//std::cout << _e<<"#"<<line<<"#\t#"<<result<<"#\n";
+         else
+           {
+             std::string::size_type _e = line.find(E); 
+             result=line.substr(_a+i->size(),_e-(_a+i->size()));
+             line=line.substr(_e+E.size(),std::string::npos);      
+           }
          VR.push_back(result);
       }
 //std::cout << VR[0]<<'\t'<<atol(VR[1].c_str())<<'\t'<<VR[2]<<'\t'<<VR[3]<<'\n';
-     CM[FileListCache::st_key(VR[0],atol(VR[1].c_str()))] = st_cache(VR[2],atoi(VR[3].c_str()));
+     CM[FileListCache::st_key(VR[0],atol(VR[1].c_str()))] = 
+       st_cache(VR[2],atoi(VR[3].c_str()));
     }
 }
 
