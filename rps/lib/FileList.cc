@@ -1,6 +1,7 @@
 #include <FileList.hh>
 #include <dirent.h>
 #include<iostream>
+#include<vector>
 #include <sys/stat.h>
 
 
@@ -13,7 +14,8 @@ FileList::FileList(const std::string &s)
 
    get_file_info();
    for(t_filemap::iterator i=filemap.begin();i!=filemap.end();++i)
-      std::sort(i->second.begin(),i->second.end());
+      i->second.sort();      
+//      std::sort(i->second.begin(),i->second.end());
 }
 
 void FileList::read_dir(const st_key &key)
@@ -48,7 +50,7 @@ void FileList::get_file_info()
    for(t_filemap::iterator i=filemap.begin();i!=filemap.end();++i)
     {
       std::cout << i->first.path<<'\t'<<i->first.sub_level<<'\n';
-      for(std::vector<Soundfile>::iterator j=i->second.begin();j!=i->second.end();++j)
+      for(std::list<Soundfile>::iterator j=i->second.begin();j!=i->second.end();++j)
        {
          std::string cmd="qmp3info -s "+j->Filename();
 
@@ -88,7 +90,7 @@ void FileList::get_file_info()
 }
 
 
-std::vector<Soundfile> FileList::get_cd_file_list(const std::string &cd) const
+std::list<Soundfile> FileList::get_cd_file_list(const std::string &cd) const
 {
    for(t_filemap::const_iterator i=filemap.begin();i!=filemap.end();++i)
       if(i->first.subpath == cd) 
@@ -106,7 +108,7 @@ void FileList::save_cache() const
    std::cout << "Saving "<<sname<<'\n';
    for(t_filemap::const_iterator i=filemap.begin();i!=filemap.end();++i)
     {
-      for(std::vector<Soundfile>::const_iterator j=i->second.begin();j!=i->second.end();++j)
+      for(std::list<Soundfile>::const_iterator j=i->second.begin();j!=i->second.end();++j)
        {
          fo << "Name:(("  <<j->Filename()<<"))\t"
             << "Length:(("<<j->Time()<<"))\t"
@@ -118,20 +120,20 @@ void FileList::save_cache() const
 void FileList::set_default_volume(const Soundfile &s,const int dv)
 {
   for(t_filemap::iterator i=filemap.begin();i!=filemap.end();++i)
-     for(std::vector<Soundfile>::iterator j=i->second.begin();j!=i->second.end();++j)
+     for(std::list<Soundfile>::iterator j=i->second.begin();j!=i->second.end();++j)
         if (j->Name()==s.Name()) j->setDefaultVolume(dv) ;
 }
 
 int FileList::get_default_volume(const Soundfile &s) const
 {
   for(t_filemap::const_iterator i=filemap.begin();i!=filemap.end();++i)
-     for(std::vector<Soundfile>::const_iterator j=i->second.begin();j!=i->second.end();++j)
+     for(std::list<Soundfile>::const_iterator j=i->second.begin();j!=i->second.end();++j)
         if (j->Name()==s.Name()) return j->DefaultVolume() ;
 }
 
 
 //////////////////////////////////////////////////////////////////////////
-
+#include<vector>
 void FileListCache::load_cache() 
 {
    std::string sname=getenv("HOME")+std::string("/.rps.cache");
