@@ -1,4 +1,5 @@
-ASD_DIR=/usr/src/asd4-0.2/
+ASD_DIR=/usr/local/src/asd4/asd4/
+#/usr/src/asd4-0.2/
 
 AM_CXXFLAGS = -I${ASD_DIR}asdlib/ \
               -I${ASD_DIR}common/ \
