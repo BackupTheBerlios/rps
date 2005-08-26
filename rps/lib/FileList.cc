@@ -73,10 +73,13 @@ void FileList::get_file_info()
          if(j->Seconds() == 0)
           {
             std::vector<std::pair<std::string,std::string> > com;
+#if 1
             com.push_back(std::pair<std::string,std::string>
                ("checkmp3 "+j->Filename(),"SONG_LENGTH"));
             com.push_back(std::pair<std::string,std::string>
                ("qmp3info -s "+j->Filename(),"=>"));
+
+#endif
             for(std::vector<std::pair<std::string,std::string> >::
                const_iterator i=com.begin();i!=com.end();++i)
              {

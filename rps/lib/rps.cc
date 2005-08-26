@@ -176,6 +176,7 @@ void RPS::load_conf(std::vector<std::string> &path) const
        std::string search_string="Path=";
        std::string line;
        std::getline(fi,line);
+//std::cout << line<<'\n';
        if(!fi.good()) break; 
 //std::cout << "Found path "<<line<<'\n';
        std::string::size_type _a = line.find(search_string);
