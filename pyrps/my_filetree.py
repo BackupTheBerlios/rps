@@ -3,8 +3,6 @@ import gobject
 import os
 import sys
 import MyCache
-#import re
-#from popen2 import *
 import MyPlay
 
 (
@@ -188,9 +186,7 @@ class FileTree(gtk.ScrolledWindow):
     self.MainWindow.playlist.add(tree)
 
   def row_activated_kill(self,tree,path,view_column):
-
-      print 'T=',tree,'\nP=',path,'\n', 'C=',view_column
-
+#      print 'T=',tree,'\nP=',path,'\n', 'C=',view_column
       if tree.get_model():
         iter=tree.get_model().get_iter(path)
         val = tree.get_model().get_value(iter,COLUMN_PID)
