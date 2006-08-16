@@ -2,6 +2,9 @@ import gtk
 import gobject
 import os
 import sys
+import MyCache
+#import re
+#from popen2 import *
 import MyPlay
 
 (
@@ -22,6 +25,7 @@ import MyPlay
 class FileTree(gtk.ScrolledWindow):
   def __init__(self,MainWindow,path):
         self.MainWindow = MainWindow
+        self.Cache = MyCache.MyCache()
 
         gtk.ScrolledWindow.__init__(self)
         self.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
@@ -42,7 +46,9 @@ class FileTree(gtk.ScrolledWindow):
 #        all_files = MainWindow.VecFiles
 
 #        print all_files
+        print "creating nodes from all files ..."
         self.create_node(model,None,path)
+        print " ... finished"
 
         column = gtk.TreeViewColumn("Directories", gtk.CellRendererText(), text=COLUMN_DIR)
         column.set_sort_column_id(COLUMN_DIR)
@@ -62,7 +68,20 @@ class FileTree(gtk.ScrolledWindow):
 
 #        sw = gtk.ScrolledWindow()
         self.add(treeview)
-                         
+
+        # now expand all top-level nodes
+#        rootiter = treeview.get_model().get_iter_first()
+#        print rootiter,treeview.get_model().get_path(rootiter)
+#        treeview.expand_row(treeview.get_model().get_path(rootiter),False)
+
+#        treeview.expand_to_path((0,0))
+#        iter=rootiter
+#        while treeview.get_model().iter_next(iter):
+#          treeview.expand_row(treeview.get_model().get_path(iter),True)
+          
+#        print treeview.get_model().get_iter_first().get_path()
+#        while treeview.get_model()
+#        treeview.expand_row()
 #        treeview.expand_all()
 
   def create_node(self,model,parent_iter,path):
@@ -101,7 +120,8 @@ class FileTree(gtk.ScrolledWindow):
        if os.path.isfile(fullName):
           model.set_value(hiter, COLUMN_FILE, name)
           model.set_value(hiter, COLUMN_FULLPATH, fullName)
-          model.set_value(hiter, COLUMN_LENGTH, "0:00")
+          slen = self.Cache.find(name,fullName)
+          model.set_value(hiter, COLUMN_LENGTH, slen)
           
 
 #          self.dirList.append(fullName)
@@ -182,7 +202,7 @@ class FileTree(gtk.ScrolledWindow):
           self.update_playlist()
       else: 'No pid found'
 
-
+###################################################################
 
 
 #  def selection_changed(self,selection):
@@ -194,3 +214,5 @@ class FileTree(gtk.ScrolledWindow):
 #      print file
 #      if file is None : return
 #      self.MainWindow.file_selected(file)
+####################################################################
+      

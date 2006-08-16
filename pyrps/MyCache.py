@@ -22,7 +22,7 @@ class MyCache:
         #print "Warning: more than one entry for "+name+" found in cachefile:",cache_line
         reg = re.compile("^"+name+".*")
         for i in cache_line:
-            print "Q:",reg.findall(i)
+#            print "Q:",reg.findall(i)
             if len(reg.findall(i)) :
                X = reg.findall(i)[0]
                break

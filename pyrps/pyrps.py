@@ -24,7 +24,8 @@ def check_esd():
         os.system("esd &")
 
 if __name__ == "__main__":
-   path="/home/thoma/media/RoleSound/effect"
+   path="/home/thoma/media/RoleSound/"
+#   path="/home/thoma/media/RoleSound/effect/"
    check_esd()
    gtk_window.MainWindow(path)
    gtk_window.gtk.main()

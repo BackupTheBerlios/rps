@@ -15,7 +15,7 @@ class MainWindow(gtk.Window):
 
   def __init__(self, path,parent=None):
 
-    self.Play = MyPlay.MyPlay()
+    self.Play = MyPlay.MyPlay(path)
 
     # init importend variables
 #    self.VecFiles = VecFiles 

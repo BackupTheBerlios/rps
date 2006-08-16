@@ -5,7 +5,8 @@ from popen2 import *
 class MyPlay:
 
 
-  def __init__(self):
+  def __init__(self,path):
+    self.path=path
     self.xine_conf = os.environ['HOME']+"/.xine/config"
     os.system("cp -v "+self.xine_conf+" "+self.xine_conf+".rps")
 
@@ -26,11 +27,21 @@ class MyPlay:
     os.system("sed 's/\(.*\)gui.panel_y:\(.*\)/gui.panel_y:"+str(self.start_y)+"/g' "+self.xine_conf+" > X.tmp && cp X.tmp "+self.xine_conf)
     self.start_y += self.y_increment
     if (self.start_y > self.max_y): self.start_y = 0
+
+  def isCD(self,file,filename):
+    is_cd = False
+    if   file.find(self.path+"CDs") is 0:     is_cd = True
+    elif file.find(self.path+"/CDs")is 0:     is_cd = True
+    if is_cd:
+      return file.rstrip(filename)+"/*"
+    else:
+      return file
     
   def Play(self,file,repeat,filename):
     self.increment_panel_position()
     cmd = "xine --no-splash --hide-video --hide-gui --auto-play=q "
 #    cmd="xine "
+    file = self.isCD(file,filename)    # may replace >file< with >/fullpathname/*<
     if (repeat): cmd += "--loop=repeat "
     cmd += file +" &"
 
