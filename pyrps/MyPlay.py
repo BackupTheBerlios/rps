@@ -30,27 +30,31 @@ class MyPlay:
 
   def isCD(self,file):
 #    self.is_cd = False
-#    print file
+#    print 'EEEEEEE',file,file.find("01")
+#    print 'EEEEEEE',file.find(self.path+"CDs"),
 #    print file.find(self.path+"CDs"),file.find(self.path+"/CDs")
-    if   file.find(self.path+"CDs") is 0:     return True
-    elif file.find(self.path+"/CDs")is 0:     return True
-    else                                :     return False
+    ret = False
+    if file.find("01") is not -1 :
+      if   file.find(self.path+"CDs") is 0 : ret = True
+      elif file.find(self.path+"/CDs")is 0 : ret = True
+#    print 'XXXXXX',file.find("01"), ret
+    return ret
 
   def Play(self,file,repeat,filename):
     self.increment_panel_position()
-    cmd = "xine --no-splash --hide-video --hide-gui --auto-play=q "
-#    cmd="xine "
+    path = file.rstrip(filename) 
+
+    cmd = "cd "+path+"; xine --no-splash --hide-video --hide-gui --auto-play=q "
     if (repeat): cmd += "--loop=repeat "
     if self.isCD(file) : 
-      file_ex = file.rstrip(filename) 
-      cmd += file_ex+"/*" # the '*' enshures right order for player
+      file_ex = "*" 
     else: 
       file_ex = file
-      cmd += file_ex 
+    cmd += file_ex 
 
 #    print  cmd
     os.system(cmd+" &")
-    pid="ps -ef | grep xine | grep -v grep | grep "+file_ex+" | awk '{print $2}' | sort -n"
+    pid="ps -ef | grep xine | grep -v grep | grep "+filename+" | awk '{print $2}' | sort -n"
 #    pid="ps -ef | grep xine | grep "+file
     print pid
     o,i,e = popen3(pid)

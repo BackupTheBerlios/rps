@@ -31,7 +31,6 @@ class FileTree(gtk.ScrolledWindow):
 
         model = gtk.TreeStore(gobject.TYPE_PYOBJECT, gobject.TYPE_STRING,
                               gobject.TYPE_STRING,gobject.TYPE_STRING)
-#        gtk.TreeView.__init__(self,model)
         treeview=gtk.TreeView(model)
 
 #        selection = treeview.get_selection()
@@ -49,13 +48,16 @@ class FileTree(gtk.ScrolledWindow):
         print " ... finished"
 
         column = gtk.TreeViewColumn("Directories", gtk.CellRendererText(), text=COLUMN_DIR)
-        column.set_sort_column_id(COLUMN_DIR)
-        column.set_sort_order(gtk.SORT_ASCENDING)
+#        column.set_sort_column_id(COLUMN_DIR)
+#        column.set_sort_order(gtk.SORT_ASCENDING)
         treeview.append_column(column)
-        column.clicked()
+#        column.clicked()
 
         column = gtk.TreeViewColumn("File", gtk.CellRendererText(), text=COLUMN_FILE)
+#        column.set_sort_column_id(COLUMN_FILE)
+#        column.set_sort_order(gtk.SORT_ASCENDING)
         treeview.append_column(column)
+#        column.clicked()
         column = gtk.TreeViewColumn("Length", gtk.CellRendererText(), text=COLUMN_LENGTH)
         treeview.append_column(column)
 
@@ -168,10 +170,10 @@ class FileTree(gtk.ScrolledWindow):
     model.remove(iter) # remove last (empty) row
 
     column = gtk.TreeViewColumn("Actual Songs (click to kill)", gtk.CellRendererText(), text=COLUMN_PLAYFILE)
-    column.set_sort_column_id(COLUMN_PLAYFILE)
-    column.set_sort_order(gtk.SORT_ASCENDING)
+#    column.set_sort_column_id(COLUMN_PLAYFILE)
+#    column.set_sort_order(gtk.SORT_ASCENDING)
     tree.append_column(column)
-    column.clicked()
+#    column.clicked()
 
 #    column = gtk.TreeViewColumn("Kill Song",gtk.CellRendererEditable())#, gtk.CellRendererToggle(), text=1)
 #    column = gtk.TreeViewColumn('Icon', gtk.CellRendererPixbuf(), pixbuf=1)
