@@ -40,7 +40,7 @@ class MyPlay:
 #    print 'XXXXXX',file.find("01"), ret
     return ret
 
-  def Play(self,file,repeat,filename):
+  def Play(self,file,repeat,filename,parent_dir):
     self.increment_panel_position()
     path = file.rstrip(filename) 
 
@@ -73,6 +73,9 @@ class MyPlay:
     
     if len(list_of_pids) > 0 : 
 #      print "PID: ",list_of_pids[0]
-      self.actual_playlist.append([filename,int(list_of_pids[0])])
+      if self.isCD(file) :
+        self.actual_playlist.append([parent_dir,int(list_of_pids[0])])
+      else:
+        self.actual_playlist.append([filename,int(list_of_pids[0])])
 
     

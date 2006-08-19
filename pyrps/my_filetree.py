@@ -9,8 +9,9 @@ import MyPlay
       COLUMN_FULLPATH,
       COLUMN_DIR,
       COLUMN_FILE,
-      COLUMN_LENGTH
-) = range(4)
+      COLUMN_LENGTH,
+      COLUMN_PARENTPATH
+) = range(5)
 
 (
       COLUMN_PID,
@@ -30,7 +31,8 @@ class FileTree(gtk.ScrolledWindow):
         self.set_shadow_type(gtk.SHADOW_IN)
 
         model = gtk.TreeStore(gobject.TYPE_PYOBJECT, gobject.TYPE_STRING,
-                              gobject.TYPE_STRING,gobject.TYPE_STRING)
+                              gobject.TYPE_STRING,gobject.TYPE_STRING,
+                              gobject.TYPE_STRING)
         treeview=gtk.TreeView(model)
 
 #        selection = treeview.get_selection()
@@ -44,7 +46,7 @@ class FileTree(gtk.ScrolledWindow):
 
 #        print all_files
         print "creating nodes from all files ..."
-        self.create_node(model,None,path)
+        self.create_node(model,None,path,'')
         print " ... finished"
 
         column = gtk.TreeViewColumn("Directories", gtk.CellRendererText(), text=COLUMN_DIR)
@@ -84,7 +86,7 @@ class FileTree(gtk.ScrolledWindow):
 #        treeview.expand_row()
 #        treeview.expand_all()
 
-  def create_node(self,model,parent_iter,path):
+  def create_node(self,model,parent_iter,path,parent_path):
     # Confirm the directory is valid and raise an exception if not.
     try:
         self.names = os.listdir(path)
@@ -116,12 +118,13 @@ class FileTree(gtk.ScrolledWindow):
        hiter = model.insert_before(parent_iter, None)
        if os.path.isdir(fullName):   
           model.set_value(hiter, COLUMN_DIR, name)
-          self.create_node(model,hiter,fullName)
+          self.create_node(model,hiter,fullName,name)
        if os.path.isfile(fullName):
           model.set_value(hiter, COLUMN_FILE, name)
           model.set_value(hiter, COLUMN_FULLPATH, fullName)
           slen = self.Cache.find(name,fullName)
           model.set_value(hiter, COLUMN_LENGTH, slen)
+          model.set_value(hiter, COLUMN_PARENTPATH, parent_path)
           
 
 #          self.dirList.append(fullName)
@@ -145,7 +148,8 @@ class FileTree(gtk.ScrolledWindow):
         if val:
           repeat = self.MainWindow.Buttons.button_repeat.get_active()
           file =  tree.get_model().get_value(iter,COLUMN_FILE)
-          self.MainWindow.Play.Play(val,repeat,file)
+          parent_dir=tree.get_model().get_value(iter,COLUMN_PARENTPATH)
+          self.MainWindow.Play.Play(val,repeat,file,parent_dir)
           self.update_playlist()
       else: 'No Model found'
 
@@ -170,10 +174,7 @@ class FileTree(gtk.ScrolledWindow):
     model.remove(iter) # remove last (empty) row
 
     column = gtk.TreeViewColumn("Actual Songs (click to kill)", gtk.CellRendererText(), text=COLUMN_PLAYFILE)
-#    column.set_sort_column_id(COLUMN_PLAYFILE)
-#    column.set_sort_order(gtk.SORT_ASCENDING)
     tree.append_column(column)
-#    column.clicked()
 
 #    column = gtk.TreeViewColumn("Kill Song",gtk.CellRendererEditable())#, gtk.CellRendererToggle(), text=1)
 #    column = gtk.TreeViewColumn('Icon', gtk.CellRendererPixbuf(), pixbuf=1)
