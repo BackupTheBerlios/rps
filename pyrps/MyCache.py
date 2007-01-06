@@ -9,10 +9,12 @@ class MyCache:
     self.cachefilename=os.environ['HOME']+"/.pyrps.cache"
     try:
       cachefile = file(self.cachefilename,'r')
+      self.cache_content = cachefile.read()
+      cachefile.close()
     except:
       cachefile = file(self.cachefilename,'w')
-    self.cache_content = cachefile.read()
-    cachefile.close()
+      self.cache_content = ""
+      cachefile.close()
     
   def find(self,name,fullName):
 
