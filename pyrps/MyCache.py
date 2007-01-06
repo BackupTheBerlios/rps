@@ -13,6 +13,7 @@ class MyCache:
       cachefile.close()
     except:
       f = file(self.cachefilename,'w')
+      self.cache_content = f.read()
       f.close()
     
   def find(self,name,fullName):
