@@ -1,6 +1,7 @@
 #from popen2 import *
 import os
 from popen2 import *
+import subprocess
 
 class MyPlay:
 
@@ -28,33 +29,38 @@ class MyPlay:
     self.start_y += self.y_increment
     if (self.start_y > self.max_y): self.start_y = 0
 
-  def isCD(self,file):
-#    self.is_cd = False
-#    print 'EEEEEEE',file,file.find("01")
-#    print 'EEEEEEE',file.find(self.path+"CDs"),
-#    print file.find(self.path+"CDs"),file.find(self.path+"/CDs")
-    ret = False
-    if file.find("01") is not -1 :
-      if   file.find(self.path+"CDs") is 0 : ret = True
-      elif file.find(self.path+"/CDs")is 0 : ret = True
-#    print 'XXXXXX',file.find("01"), ret
-    return ret
+#  def isCD(self,file):
+#    ret = False
+#    if   file.find(self.path+"CDs") is 0 : ret = True
+#    elif file.find(self.path+"/CDs")is 0 : ret = True
+#    return ret
 
-  def Play(self,file,repeat,filename,parent_dir):
+  def Play(self,fullpath,repeat,filename,parent_dir):
     self.increment_panel_position()
-    path = file.rstrip(filename) 
+    path = fullpath.rstrip(filename) 
 
     cmd = "cd "+path+"; xine --no-splash --hide-video --hide-gui --auto-play=q "
     if (repeat): cmd += "--loop=repeat "
-    if self.isCD(file) : 
-      file_ex = "*" 
-    else: 
-      file_ex = file
-    cmd += file_ex 
+    cmd += filename
 
-#    print  cmd
+#    pid = Popen3(cmd)
+#    sp = subprocess.Popen(cmd,shell=False)
+#    pid = sp.pid
+#    print sp.pid
+#    print "pids:",sp.pid
+#    if filename is "*" :
+#      self.actual_playlist.append( [parent_dir,pid] )
+#    else:
+#      self.actual_playlist.append( [filename,pid] )
+#
+#    print "Playlist :",self.actual_playlist
+
+##    print  cmd
     os.system(cmd+" &")
-    pid="ps -ef | grep xine | grep -v grep | grep "+filename+" | awk '{print $2}' | sort -n"
+    if filename is not "*" :
+      pid="ps -ef | grep xine | grep -v grep | grep "+filename+" | awk '{print $2}' | sort -n"
+    else:
+      pid="ps -ef | grep xine | grep -v grep | grep "+fullpath+" | awk '{print $2}' | sort -n"
 #    pid="ps -ef | grep xine | grep "+file
     print pid
     o,i,e = popen3(pid)
@@ -73,8 +79,9 @@ class MyPlay:
     
     if len(list_of_pids) > 0 : 
 #      print "PID: ",list_of_pids[0]
-      if self.isCD(file) :
-        self.actual_playlist.append([parent_dir,int(list_of_pids[0])])
+      if filename is "*" :
+#        self.actual_playlist.append([parent_dir,int(list_of_pids[0])])
+        self.actual_playlist.append([fullpath,int(list_of_pids[0])])
       else:
         self.actual_playlist.append([filename,int(list_of_pids[0])])
 

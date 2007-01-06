@@ -1,17 +1,21 @@
 import gtk
 import gobject
 import os
+import signal
 import sys
 import MyCache
 import MyPlay
+import misc_functions
+
 
 (
       COLUMN_FULLPATH,
       COLUMN_DIR,
       COLUMN_FILE,
       COLUMN_LENGTH,
-      COLUMN_PARENTPATH
-) = range(5)
+      COLUMN_PARENTPATH,
+      COLUMN_HAS_SUBDIRS
+) = range(6)
 
 (
       COLUMN_PID,
@@ -32,7 +36,7 @@ class FileTree(gtk.ScrolledWindow):
 
         model = gtk.TreeStore(gobject.TYPE_PYOBJECT, gobject.TYPE_STRING,
                               gobject.TYPE_STRING,gobject.TYPE_STRING,
-                              gobject.TYPE_STRING)
+                              gobject.TYPE_STRING,gobject.TYPE_BOOLEAN)
         treeview=gtk.TreeView(model)
 
 #        selection = treeview.get_selection()
@@ -46,7 +50,7 @@ class FileTree(gtk.ScrolledWindow):
 
 #        print all_files
         print "creating nodes from all files ..."
-        self.create_node(model,None,path,'')
+        self.create_node(model,None,path,None)
         print " ... finished"
 
         column = gtk.TreeViewColumn("Directories", gtk.CellRendererText(), text=COLUMN_DIR)
@@ -68,21 +72,8 @@ class FileTree(gtk.ScrolledWindow):
 #        selection.connect('changed', self.selection_changed)
 #        selection.connect('clicked', self.selection_changed)
 
-#        sw = gtk.ScrolledWindow()
         self.add(treeview)
 
-        # now expand all top-level nodes
-#        rootiter = treeview.get_model().get_iter_first()
-#        print rootiter,treeview.get_model().get_path(rootiter)
-#        treeview.expand_row(treeview.get_model().get_path(rootiter),False)
-
-#        treeview.expand_to_path((0,0))
-#        iter=rootiter
-#        while treeview.get_model().iter_next(iter):
-#          treeview.expand_row(treeview.get_model().get_path(iter),True)
-          
-#        print treeview.get_model().get_iter_first().get_path()
-#        while treeview.get_model()
 #        treeview.expand_row()
 #        treeview.expand_all()
 
@@ -94,48 +85,33 @@ class FileTree(gtk.ScrolledWindow):
     except os.error:
         raise NoSuchDirectory(path)
 
-    # The directory exists.  Visit it and carry on if we're not told to skip.
-    dirName = os.path.split(path)[1]
-    if dirName == "":
-    # Special case for root directories.
-       dirName = os.path.split(path)[0]
-
+    
     # Iterate over the names in the directory list.
+    has_no_subdirs = False
     for name in self.names:
 #       print 'name=',name 
        # Pass over current and parent pseudo-directories.
        if name == "." or name == "..":
          next
+
        # Get the full name including base path.
        fullName = os.path.join(path, name)
                                   
-       # If it's a file, visit if interested.
-#       if os.path.isfile(fullName): 
-#         self.fileList.append(fullName)
-
-       # If it's a directory, store it for future processing.
-#       if os.path.isdir(fullName):   
        hiter = model.insert_before(parent_iter, None)
+       model.set_value(hiter, COLUMN_FULLPATH, fullName)
+       model.set_value(hiter, COLUMN_PARENTPATH, parent_path)
        if os.path.isdir(fullName):   
+          has_no_subdirs = True
           model.set_value(hiter, COLUMN_DIR, name)
           self.create_node(model,hiter,fullName,name)
        if os.path.isfile(fullName):
           model.set_value(hiter, COLUMN_FILE, name)
-          model.set_value(hiter, COLUMN_FULLPATH, fullName)
           slen = self.Cache.find(name,fullName)
           model.set_value(hiter, COLUMN_LENGTH, slen)
-          model.set_value(hiter, COLUMN_PARENTPATH, parent_path)
-          
 
-#          self.dirList.append(fullName)
-
-
-#        print i
-#      for i in FileDir.fileList:
-#        print i
-#        hiter = model.insert_before(parent_iter, None)
-#        model.set_value(hiter, 1, i)
-#        self.create_node(self,model,hiter,i.dirList)
+#    print has_no_subdirs,path
+    if(parent_iter):
+      model.set_value(parent_iter, COLUMN_HAS_SUBDIRS, has_no_subdirs)
 
   def row_activated(self,tree,path,view_column):
 #      print 'T=',tree,'\nP=',path,'\n', 'C=',view_column
@@ -144,16 +120,30 @@ class FileTree(gtk.ScrolledWindow):
 
       if tree.get_model():
         iter=tree.get_model().get_iter(path)
-        val = tree.get_model().get_value(iter,COLUMN_FULLPATH)
-        if val:
-          repeat = self.MainWindow.Buttons.button_repeat.get_active()
-          file =  tree.get_model().get_value(iter,COLUMN_FILE)
-          parent_dir=tree.get_model().get_value(iter,COLUMN_PARENTPATH)
-          self.MainWindow.Play.Play(val,repeat,file,parent_dir)
+        fullpath       = tree.get_model().get_value(iter,COLUMN_FULLPATH)
+        has_sub_dirs   = tree.get_model().get_value(iter,COLUMN_HAS_SUBDIRS)
+        file           = tree.get_model().get_value(iter,COLUMN_FILE)
+        dir            = tree.get_model().get_value(iter,COLUMN_DIR)
+
+        repeat = self.MainWindow.Buttons.button_repeat.get_active()
+
+#        print has_sub_dirs,dir,fullpath,file
+        if file:
+          self.MainWindow.Play.Play(fullpath,repeat,file,None)
           self.update_playlist()
+        if dir and not has_sub_dirs:
+          if misc_functions.isCD(fullpath): 
+            parent_dir=tree.get_model().get_value(iter,COLUMN_PARENTPATH)
+            print "PLAYDIR= ",fullpath,parent_dir
+            self.MainWindow.Play.Play(fullpath,repeat,"*",parent_dir)
+            self.update_playlist()
+#          else:
+#            print "Not playing"
+                    
       else: 'No Model found'
 
-
+#################################################################################
+#################################################################################
   def update_playlist(self):
     try : # first time options are created no child exists
       self.MainWindow.playlist.remove(self.MainWindow.playlist.get_child())
@@ -164,7 +154,7 @@ class FileTree(gtk.ScrolledWindow):
 #    model = gtk.TreeStore(gobject.TYPE_STRING,gtk.gdk.Pixbuf)
     tree = gtk.TreeView(model)
     iter = model.insert_before(None, None)
-    print "SIZE=",len(self.MainWindow.Play.actual_playlist)
+#    print "SIZE=",len(self.MainWindow.Play.actual_playlist)
     for i in self.MainWindow.Play.actual_playlist:
         file=i[0]
         pid=i[1]
@@ -195,10 +185,16 @@ class FileTree(gtk.ScrolledWindow):
         val = tree.get_model().get_value(iter,COLUMN_PID)
         pid = val[1]
         #print 'val=',val, 'pid=',pid
-        if pid:
-          os.system("kill "+str(pid))
-          self.MainWindow.Play.actual_playlist.remove(val)
-          self.update_playlist()
+#        if pid:
+#          os.system("kill "+str(pid))
+        try:
+#          print "trying to kill pid ",pid
+          os.kill(pid, signal.SIGTERM)
+        except:
+          print "pid ",pid ," des not exist "
+        self.MainWindow.Play.actual_playlist.remove(val)
+        self.update_playlist()
+        
       else: 'No pid found'
 
 ###################################################################

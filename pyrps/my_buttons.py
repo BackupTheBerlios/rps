@@ -1,6 +1,7 @@
 import gtk
 import os
 import MyPlay
+import signal
 
 class Buttons(gtk.Frame):
   
@@ -30,6 +31,11 @@ class Buttons(gtk.Frame):
     button.connect('clicked', lambda *w: self.quit_program() )
     bbox.pack_start(button,expand=False,fill=False)
 
+    button = gtk.Button('Stop Playing')
+    self.MW.tooltips.set_tip(button, "Stop all xine")
+    button.connect('clicked', lambda *w: self.kill_all_songs() )
+    bbox.pack_start(button,expand=False,fill=False)
+
 #    button = gtk.Button(stock='gtk-help')
 #    self.MW.tooltips.set_tip(button, "Not implemented yet")
 #    bbox.pack_start(button,expand=False,fill=False)
@@ -40,3 +46,14 @@ class Buttons(gtk.Frame):
     os.system("killall xine 2> /dev/null")
     os.system("killall -9 xine 2> /dev/null")
     
+  def kill_all_songs(self):
+    print "killing all in list"
+    for i in self.MW.Play.actual_playlist:
+      try:
+        os.kill(i[1], signal.SIGTERM)
+      except:
+        pass
+    os.system("killall xine 2> /dev/null")
+    os.system("killall -9 xine 2> /dev/null")
+    self.MW.Play.actual_playlist=[]
+    self.MW.filetree.update_playlist()

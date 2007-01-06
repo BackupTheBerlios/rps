@@ -2,13 +2,18 @@ from popen2 import *
 import re
 import os
 from popen2 import *
+import sys
 
 class MyCache:
   def __init__(self):
-    cachefilename=os.environ['HOME']+"/.pyrps.cache"
-    cachefile = file(cachefilename,'r')
-    self.cache_content = cachefile.read()
-    cachefile.close()
+    self.cachefilename=os.environ['HOME']+"/.pyrps.cache"
+    try:
+      cachefile = file(self.cachefilename,'r')
+      self.cache_content = cachefile.read()
+      cachefile.close()
+    except:
+      f = file(self.cachefilename,'w')
+      f.close()
     
   def find(self,name,fullName):
 
@@ -37,6 +42,7 @@ class MyCache:
         slen = slen.strip()
         return slen    
     else: # calculate length and add to cachefile
+      #print fullName
       cmd="checkmp3 "+fullName+" | grep SONG_LENGTH | awk '{print $2}'"
       #cmd="qmp3info -s "+fullName+" | awk '{print $4}'" #works not with damaged hea
       o,i,e = popen3(cmd)
@@ -46,8 +52,8 @@ class MyCache:
       if slen.find("."):            # remove hundredth seconds 
         reg  = re.compile('\.\d\d')
         slen = reg.sub("",slen)
-      print "Add ",slen, name,last_modified, " to "+cachefilename
-      cachefile = file(cachefilename,'a')
+      print "Add ",slen, name,last_modified, " to "+self.cachefilename
+      cachefile = file(self.cachefilename,'a')
       cachefile.write(name+"  "+slen+"  "+str(last_modified)+"\n")
       cachefile.close()
       return slen

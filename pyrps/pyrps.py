@@ -1,6 +1,7 @@
 #!/usr/bin/python2.4
 import gtk_window
 import os
+import sys
 from popen2 import *
 
 
@@ -23,7 +24,10 @@ def check_esd():
         print " starting esd"
         os.system("esd &")
 
+#import test
 if __name__ == "__main__":
+#   test
+#   sys.exit(1)
    path="/home/thoma/media/RoleSound/"
 #   path="/home/thoma/media/RoleSound/effect/"
    check_esd()
