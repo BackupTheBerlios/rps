@@ -15,7 +15,7 @@ class MainWindow(gtk.Window):
 
   def __init__(self, path,parent=None):
 
-    self.Play = MyPlay.MyPlay(path)
+    self.Play = MyPlay.MyPlay(path,self)
 
     # Create the toplevel window
     gtk.Window.__init__(self)   

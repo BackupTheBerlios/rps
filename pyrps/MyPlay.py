@@ -5,19 +5,23 @@ import subprocess
 
 class MyPlay:
 
+  def __init__(self,path,MainWindow):
 
-  def __init__(self,path):
+    self.MW = MainWindow
+
     self.path=path
     self.xine_conf = os.environ['HOME']+"/.xine/config"
     os.system("cp -v "+self.xine_conf+" "+self.xine_conf+".rps")
 
-    self.start_x=870
+    #self.start_x=870
+    self.start_x=600
     os.system("sed 's/\(.*\)gui.panel_x:\(.*\)/gui.panel_x:"+str(self.start_x)+"/g' "+self.xine_conf+" > X.tmp && cp X.tmp "+self.xine_conf)
 
     self.start_y=0
     self.y_increment=100
-    self.max_y=900
-
+    #self.max_y=900
+    self.max_y=700
+    
     self.actual_playlist = []
 
   def __del__(self):
@@ -35,7 +39,14 @@ class MyPlay:
 #    elif file.find(self.path+"/CDs")is 0 : ret = True
 #    return ret
 
-  def Play(self,fullpath,repeat,filename,parent_dir):
+  def Play(self,fullpath,repeat,kill_for_new,filename,parent_dir):
+
+    if kill_for_new:
+      print "   active killer"
+      self.MW.Buttons.kill_all_songs()
+    else:
+      print "   nokill"
+
     self.increment_panel_position()
     path = fullpath.rstrip(filename) 
 

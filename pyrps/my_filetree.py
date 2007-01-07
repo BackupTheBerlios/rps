@@ -127,15 +127,18 @@ class FileTree(gtk.ScrolledWindow):
 
         repeat = self.MainWindow.Buttons.button_repeat.get_active()
 
+
 #        print has_sub_dirs,dir,fullpath,file
+      
+        kill_for_new = self.MainWindow.Buttons.button_stop_on_new.get_active()
         if file:
-          self.MainWindow.Play.Play(fullpath,repeat,file,None)
+          self.MainWindow.Play.Play(fullpath,repeat,kill_for_new,file,None)
           self.update_playlist()
         if dir and not has_sub_dirs:
           if misc_functions.isCD(fullpath): 
             parent_dir=tree.get_model().get_value(iter,COLUMN_PARENTPATH)
             print "PLAYDIR= ",fullpath,parent_dir
-            self.MainWindow.Play.Play(fullpath,repeat,"*",parent_dir)
+            self.MainWindow.Play.Play(fullpath,repeat,kill_for_new,"*",parent_dir)
             self.update_playlist()
 #          else:
 #            print "Not playing"

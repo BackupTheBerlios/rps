@@ -31,6 +31,10 @@ class Buttons(gtk.Frame):
     button.connect('clicked', lambda *w: self.quit_program() )
     bbox.pack_start(button,expand=False,fill=False)
 
+    self.button_stop_on_new = gtk.ToggleButton('Stop For New')
+    self.MW.tooltips.set_tip(self.button_stop_on_new , "Stop all xine when starting new sample")
+    bbox.pack_start(self.button_stop_on_new ,expand=False,fill=False)
+
     button = gtk.Button('Stop Playing')
     self.MW.tooltips.set_tip(button, "Stop all xine")
     button.connect('clicked', lambda *w: self.kill_all_songs() )
